@@ -5,15 +5,15 @@ void writeAnswer(int ans);
 
 int readNumber()
 {
-	int n{};
+	std::cout << "Enter a number: ";
+	int n {};
 	std::cin >> n;
-
 	return n;
 }
 
 void writeAnswer(int ans)
 {
-	std::cout << ans << '\n';
+	std::cout << "The answer is " << ans << '\n';
 	return;
 }
 
@@ -21,10 +21,6 @@ int main()
 {
 	int a{ readNumber() };
 	int b{ readNumber() };
-
-	int answer = a + b;
-
-	writeAnswer(answer);
-
+	writeAnswer(a + b);
 	return 0;
 }
