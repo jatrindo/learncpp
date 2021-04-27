@@ -1,6 +1,6 @@
 /*
  * What does the call stack look like in the following program when the point
- * of execution is on line 4?
+ * of execution is on line 4 (note: 8 in this file)?
 */
 #include <iostream>
 
