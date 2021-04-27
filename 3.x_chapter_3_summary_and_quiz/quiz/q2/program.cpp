@@ -24,7 +24,7 @@ int main()
 	int x{ };
 	int y{ };
 	x = readNumber();
-	x = readNumber();
+	y = readNumber();
 	writeAnswer(x/y);
 
 	return 0;
