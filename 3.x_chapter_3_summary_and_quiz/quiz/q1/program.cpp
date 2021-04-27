@@ -21,7 +21,7 @@ void writeAnswer(int x)
 int main()
 {
 	int x {};
-	readNumber(x);
+	x = readNumber(x);
 	x = x + readNumber(x);
 	writeAnswer(x);
 
