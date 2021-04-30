@@ -2,6 +2,7 @@
  * A program that lets the user know how many years they've lived for each
  * letter in their name (whitespace included)
 */
+#include <iomanip>
 #include <iostream>
 #include <string>
 
