@@ -18,31 +18,28 @@ char askOperatorSymbol()
 	return op_symbol; 
 }
 
-void printOperationStatement(double left, double right, char op_symbol)
+void printOperationStatement(double left, double right, char op_symbol, double result)
 {
-	std::cout << left << " " << op_symbol << " " << right << " is ";
+	std::cout << left << " " << op_symbol << " " << right << " is " << result << '\n';
 }
+
 void printOperationResult(double left, double right, char op_symbol)
 {
 	if (op_symbol == '+')
 	{
-		printOperationStatement(left, right, op_symbol);
-		std::cout << left + right << '\n';
+		printOperationStatement(left, right, op_symbol, left + right);
 	}
 	else if (op_symbol == '-')
 	{
-		printOperationStatement(left, right, op_symbol);
-		std::cout << left - right << '\n';
+		printOperationStatement(left, right, op_symbol, left - right);
 	}
 	else if (op_symbol == '*')
 	{
-		printOperationStatement(left, right, op_symbol);
-		std::cout << left * right << '\n';
+		printOperationStatement(left, right, op_symbol, left * right);
 	}
 	else if (op_symbol == '/')
 	{
-		printOperationStatement(left, right, op_symbol);
-		std::cout << left / right << '\n';
+		printOperationStatement(left, right, op_symbol, left / right);
 	}
 	else
 	{
