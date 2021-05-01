@@ -1,4 +1,5 @@
 #include "constants.h"
+
 #include <iostream>
 
 double askInitialHeight()
@@ -11,7 +12,7 @@ double askInitialHeight()
 
 double calculateHeightAfterXSeconds(double initial_height, double seconds)
 {
-	double distance_fallen{ (gravity_constant * (seconds * seconds)) / 2 };
+	double distance_fallen{ (gravity_constant * (seconds * seconds)) / 2.0 };
 
 	double final_height{ initial_height - distance_fallen };
 	if (final_height > 0.0)
@@ -24,6 +25,7 @@ double calculateHeightAfterXSeconds(double initial_height, double seconds)
 	}
 }
 
+// calculates and prints height after X seconds
 void printHeightAfterXSeconds(double initial_height, double seconds)
 {
 	double height{ calculateHeightAfterXSeconds(initial_height, seconds) };
