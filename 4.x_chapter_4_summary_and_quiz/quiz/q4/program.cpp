@@ -45,7 +45,7 @@ void printHeightAfterXSeconds(double initial_height, double seconds)
 
 int main()
 {
-	double initial_height{ askInitialHeight() };
+	const double initial_height{ askInitialHeight() };
 
 	printHeightAfterXSeconds(initial_height, 0.0);
 	printHeightAfterXSeconds(initial_height, 1.0);
