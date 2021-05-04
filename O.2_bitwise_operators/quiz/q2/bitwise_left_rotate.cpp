@@ -4,7 +4,7 @@
 std::bitset<4> rotl(std::bitset<4> bits)
 {
 	// Your code here -- okay to use bitset.test() and set()
-	bool leftmost_bit { bits.test(3) };
+	const bool leftmost_bit { bits.test(3) };
 
 	bits = bits << 1;
 
