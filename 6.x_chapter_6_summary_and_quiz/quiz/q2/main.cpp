@@ -16,9 +16,9 @@ int main()
 	std::cin >> students;
 
 		if (students > constants::max_class_size)
-			std::cout << "There are too many students in this class";
+			std::cout << "There are too many students in this class\n";
 		else
-			std::cout << "This class isn't too large";
+			std::cout << "This class isn't too large\n";
 
 	return 0;
 }
