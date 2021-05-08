@@ -13,18 +13,17 @@ int main()
 {
 	constexpr int num_lines{ 5 };
 
-	int i{ num_lines };
-	while (i > 0)
+	int outer{ num_lines };
+	while (outer > 0)
 	{
-		int j{ i };
-		while (j > 0)
+		int inner{ outer };
+		while (inner > 0)
 		{
-			std::cout << j << ' ';
-			j -= 1;
+			std::cout << inner-- << ' ';
 		}
-		std::cout << '\n';
 
-		i -= 1;
+		std::cout << '\n';
+		outer--;
 	}
 
 	return 0;
