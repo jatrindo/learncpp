@@ -4,6 +4,23 @@
 */
 #include <iostream>
 
+constexpr int pass_count_threshold{ 3 };
+
+bool passOrFail()
+{
+	static int pass_count{ 0 };
+
+	if (pass_count < pass_count_threshold)
+	{
+		pass_count += 1;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 int main()
 {
 	std::cout << "User #1: " << (passOrFail() ? "Pass" : "Fail") << '\n';
