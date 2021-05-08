@@ -11,28 +11,31 @@
 
 int main()
 {
+	// We print 5 column's worth of numbers always (even if there aren't
+	// always five numbers to fill them)
 	constexpr int num_columns{ 5 };
 
-	int outer{ 1 };
-	while ( outer <= num_columns )
+	// The current row we're on
+	int row{ 1 };
+	while ( row <= num_columns )
 	{
-		int inner{ num_columns };
-		while ( inner > 0)
+		// We always print 5 column's worth of numbers, decreasing
+		int number{ num_columns };
+		while ( number >= 1)
 		{
-			if (inner > outer)
-			{
-				std::cout << ' ' << ' ';
-			}
+			// We only print numbers equal to or less than the
+			// row we're currently on
+			if (number <= row)
+				std::cout << number << ' ';
 			else
-			{
-				std::cout << inner << ' ';
-			}
+				std::cout << ' ' << ' '; // But we still print 5 column's worth of numbers!
 
-			inner--;
+			number--;
 		}
 
+		// Move onto next row
 		std::cout << '\n';
-		outer++;
+		row++;
 	}
 
 	return 0;
