@@ -4,21 +4,10 @@
 */
 #include <iostream>
 
-constexpr int pass_count_threshold{ 3 };
-
 bool passOrFail()
 {
-	static int pass_count{ 0 };
-
-	if (pass_count < pass_count_threshold)
-	{
-		pass_count += 1;
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	static int passes_left{ 3 };
+	return (--passes_left >= 0);
 }
 
 int main()
