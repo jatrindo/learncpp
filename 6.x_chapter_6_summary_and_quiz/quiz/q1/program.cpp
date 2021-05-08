@@ -10,10 +10,12 @@ int main()
 	std::cin >> num;
 
 	if (num < 0)
+	{
 		std::cout << "Negative number entered. Marking positive.\n";
 		num = -num;
+	}
 	
-	std::cout << "You entered: " << num;
+	std::cout << "You entered: " << num << '\n';
 
 	return 0;
 }
