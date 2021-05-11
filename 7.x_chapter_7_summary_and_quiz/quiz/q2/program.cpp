@@ -1,5 +1,5 @@
 /*
- * A prime number is a natural number grater than 1 that is evenly divisible
+ * A prime number is a natural number greater than 1 that is evenly divisible
  * (with no remainder) only by 1 and itself. Complete the following program
  * by writing the isPrime() function using a for loop
 */
@@ -8,7 +8,18 @@
 
 bool isPrime(int x)
 {
-	// write this function using a for loop
+	if (x <= 1)
+		return false; // by the above definition
+
+	// Test to see that all the numbers between [2..x) do _not_ divide
+	// evenly
+	for (int i{ 2 }; i < x; i++)
+	{
+		if ((x % i) == 0)
+			return false;
+	}
+
+	return true;
 }
 
 int main()
