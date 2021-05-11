@@ -12,7 +12,9 @@ int main()
 {
 	std::string str{ "I saw a red car yesterday." };
 
-	// ...
+	// Found a string replacement function here:
+	// https://en.cppreference.com/w/cpp/string/basic_string/replace
+	str.replace(8, 3, "blue");
 	
 	std::cout << str << '\n'; // I saw a blue car yesterday
 
