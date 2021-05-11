@@ -23,18 +23,18 @@ void printHeightForTime(double height, int time)
 	std::cout << "At " << time << " seconds, the ball is at height: " << height << "\n";
 }
 
+double calculateAndPrintHeight(double initialHeight, int time)
+{
+	double height = calculateHeight(initialHeight, time);
+	printHeightForTime(height, time);
+	return height;
+}
+
 void calculateAndPrintHeightUntilGround(double initialHeight)
 {
-	int time{ 0 };
-	double currentHeight{ initialHeight };
-
-	do
-	{
-		currentHeight = calculateHeight(currentHeight, time);
-		printHeightForTime(currentHeight, time);
-		time++;
-	} while (currentHeight > 0.0);
-
+	int time{ 0 };  // In seconds
+	while (calculateAndPrintHeight(initialHeight, time++) > 0.0)
+		;
 }
 
 int main()
