@@ -20,6 +20,7 @@
  * This Slime is named Blurp and has 23 health.
 */
 #include <iostream>
+#include <string>
 
 enum class MonsterType
 {
@@ -68,8 +69,8 @@ std::string getMonsterTypeAsString(MonsterType t)
 void printMonster(Monster m)
 {
 	std::cout << "This " << getMonsterTypeAsString(m.type)
-		<< " is named " << m.name
-		<< " and has " << m.health << " health.\n";
+		  << " is named " << m.name
+		  << " and has " << m.health << " health.\n";
 }
 
 int main()
