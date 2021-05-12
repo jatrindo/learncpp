@@ -10,3 +10,39 @@
  *
  * Print the result of the multiplication of the 2 fraction variables.
 */
+#include <iostream>
+
+struct Fraction
+{
+	int numerator{};
+	int denominator{};
+};
+
+Fraction askFraction()
+{
+	Fraction frac{};
+
+	std::cout << "Enter numerator: ";
+	std::cin >> frac.numerator;
+	std::cout << "Enter denominator: ";
+	std::cin >> frac.denominator;
+
+	return frac;
+}
+
+double multiply(Fraction frac1, Fraction frac2)
+{
+	return (static_cast<float>(frac1.numerator) * frac2.numerator)
+		/ (static_cast<float>(frac1.denominator) * frac2.denominator);
+}
+
+int main()
+{
+	Fraction frac1{ askFraction() };
+	Fraction frac2{ askFraction() };
+
+	std::cout << "The result of multiplying them together is: "
+		  << multiply(frac1, frac2) << '\n';
+
+	return 0;
+}
