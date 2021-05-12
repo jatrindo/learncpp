@@ -19,3 +19,66 @@
  * This Ogre is named Torg and has 145 health.
  * This Slime is named Blurp and has 23 health.
 */
+#include <iostream>
+
+enum class MonsterType
+{
+	Ogre,
+	Dragon,
+	Orc,
+	GiantSpider,
+	Slime,
+};
+
+struct Monster
+{
+	std::string name{};
+	MonsterType type{};
+	int health{};
+};
+
+std::string getMonsterTypeAsString(MonsterType t)
+{
+	std::string name{};
+
+	switch (t)
+	{
+		case MonsterType::Ogre:
+			name = "Ogre";
+			break;
+		case MonsterType::Dragon:
+			name = "Dragon";
+			break;
+		case MonsterType::Orc:
+			name = "Orc";
+			break;
+		case MonsterType::GiantSpider:
+			name = "GiantSpider";
+			break;
+		case MonsterType::Slime:
+			name = "Slime";
+			break;
+		default:
+			name = "???";
+	}
+
+	return name;
+}
+
+void printMonster(Monster m)
+{
+	std::cout << "This " << getMonsterTypeAsString(m.type)
+		<< " is named " << m.name
+		<< " and has " << m.health << " health.\n";
+}
+
+int main()
+{
+	Monster ogre{"Torg", MonsterType::Ogre, 145};
+	Monster slime{"Blurp", MonsterType::Slime, 23};
+
+	printMonster(ogre);
+	printMonster(slime);
+
+	return 0;
+}
