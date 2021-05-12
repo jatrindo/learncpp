@@ -21,34 +21,33 @@ struct AdStats
 
 AdStats askAdStats()
 {
+	AdStats as{};
+
 	std::cout << "# ads shown?: ";
-	int ads_shown;
-	std::cin >> ads_shown;
+	std::cin >> as.ads_shown;
 
 	std::cout << "% of ads clicked?: ";
-	double percent_ads_clicked{};
-	std::cin >> percent_ads_clicked;
+	std::cin >> as.percent_ads_clicked;
 
-	std::cout << "Avg earned per click (in dollars)?: ";
-	double avg_earned_per_click{};
-	std::cin >> avg_earned_per_click;
+	std::cout << "Avg earned per click?: $";
+	std::cin >> as.avg_earned_per_click;
 
-	return AdStats{ads_shown, percent_ads_clicked / 100.0, avg_earned_per_click};
+	return as;
 }
 
-float calculateDayRevenue(AdStats adstats)
+float calculateDayRevenue(AdStats as)
 {
-	return adstats.ads_shown
-		* adstats.percent_ads_clicked
-		* adstats.avg_earned_per_click;
+	return as.ads_shown
+		* (as.percent_ads_clicked / 100.0)
+		* as.avg_earned_per_click;
 }
-void printAdStatsAndDayRevenue(AdStats adstats)
+void printAdStatsAndDayRevenue(AdStats as)
 {
 	std::cout << "\n=========== TODAY'S REVENUE: ===========\n";
-	std::cout << "# ads shown: " << adstats.ads_shown << '\n';
-	std::cout << "% of ads clicked: " << adstats.percent_ads_clicked << '\n';
-	std::cout << "Avg earned per click: " << adstats.avg_earned_per_click << '\n';
-	std::cout << "\nTotal revenue for day: " << calculateDayRevenue(adstats) << '\n';
+	std::cout << "# ads shown: " << as.ads_shown << '\n';
+	std::cout << "% of ads clicked: " << as.percent_ads_clicked << '\n';
+	std::cout << "Avg earned per click: $" << as.avg_earned_per_click << '\n';
+	std::cout << "\nTotal revenue for day: $" << calculateDayRevenue(as) << '\n';
 	std::cout << "========================================\n";
 }
 
