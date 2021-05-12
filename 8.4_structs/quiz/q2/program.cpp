@@ -32,14 +32,14 @@ Fraction askFraction()
 
 double multiply(Fraction frac1, Fraction frac2)
 {
-	return (static_cast<float>(frac1.numerator) * frac2.numerator)
-		/ (static_cast<float>(frac1.denominator) * frac2.denominator);
+	return (static_cast<float>(frac1.numerator * frac2.numerator)
+		/ (frac1.denominator * frac2.denominator));
 }
 
 int main()
 {
-	Fraction frac1{ askFraction() };
-	Fraction frac2{ askFraction() };
+	const Fraction frac1{ askFraction() };
+	const Fraction frac2{ askFraction() };
 
 	std::cout << "The result of multiplying them together is: "
 		  << multiply(frac1, frac2) << '\n';
