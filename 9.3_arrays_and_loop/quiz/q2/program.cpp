@@ -31,21 +31,20 @@ int askNumberInRange(const int min, const int max)
 		// If the user pressed ^D, we're assuming they want to exit
 		// the program
 		if (std::cin.eof())
-		{
 			std::exit(0);
-		}
+
+		// If the extraction failed, clear out error flags
+		if (std::cin.fail())
+			std::cin.clear();
+
+		// Regardless of failure, ignore any extraneous characters
+		// still left in the buffer
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 		if (response >= min && response <= max)
 			return response;
 
 		std::cout << "Invalid response.\n";
-
-		// If the extraction failed, clear out the input buffer
-		if (std::cin.fail())
-		{
-			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		}
 	}
 }
 
