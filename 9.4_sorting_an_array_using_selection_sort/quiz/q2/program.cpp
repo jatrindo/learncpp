@@ -17,24 +17,24 @@ int main()
 	// (except the last one, which will already be sorted by the time we get there)
 	for (std::size_t startIndex{ 0 }; startIndex < length - 1; ++startIndex)
 	{
-		// smallestIndex is the index of the smallest element we've encountered this iteration
-		// Start by assuming the smallest element is the first element of this iteration
-		std::size_t smallestIndex{ startIndex };
+		// largestIndex is the index of the largest element we've encountered this iteration
+		// Start by assuming the largest element is the first element of this iteration
+		std::size_t largestIndex{ startIndex };
 
-		// Then look for a smaller element in the rest of the array
+		// Then look for a larger element in the rest of the array
 		for (std::size_t currentIndex{ startIndex + 1 }; currentIndex < length; ++currentIndex)
 		{
-			// If we've found an element that is smaller than our previously found smallest
-			if (array[currentIndex] < array[smallestIndex])
+			// If we've found an element that is larger than our previously found largest
+			if (array[currentIndex] > array[largestIndex])
 			{
 				// then keep track of it
-				smallestIndex = currentIndex;
+				largestIndex = currentIndex;
 			}
 		}
 
-		// smallestIndex is now the smallest element in the remaining array
-		// swap our start element with our smallest element (this sorts it into the correct place)
-		std::swap(array[startIndex], array[smallestIndex]);
+		// largestIndex is now the largest element in the remaining array
+		// swap our start element with our largest element (this sorts it into the correct place)
+		std::swap(array[startIndex], array[largestIndex]);
 	}
 
 	// Now that the whole array is sorted, print out sorted array as proof it works
