@@ -11,7 +11,18 @@
 #include <iostream>
 #include <iterator>
 
-// ...
+int* find(int* start, int* end, int value)
+{
+	int* ptr{ start };
+	for (; ptr < end; ++ptr)
+	{
+		if (*ptr == value)
+			return ptr; // Value found!
+	}
+
+	// At this point ptr == end, indicating we haven't found the value 
+	return ptr;
+}
 
 int main()
 {
