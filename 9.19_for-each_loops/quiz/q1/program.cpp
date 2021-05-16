@@ -15,26 +15,33 @@
  * 	Megatron was not found.
 */
 #include <iostream>
+#include <string>
+#include <string_view>
 
 int main()
 {
-	std::string names[]{ "Alex", "Betty", "Caroline", "Dave", "Emily",
+	constexpr std::string_view names[]{ "Alex", "Betty", "Caroline", "Dave", "Emily",
 		"Fred", "Greg", "Holly" };
 
 	std::cout << "Enter a name: ";
 	std::string name_query{};
 	std::cin >> name_query;
 
+	bool found{ false };
+
 	for (const std::string_view name : names)
 	{
 		if (name == name_query)
 		{
-			std::cout << name_query << " was found.\n";
-			return 0;
+			found = true;
+			break;
 		}
 	}
 
-	std::cout << name_query << " was not found.\n";
+	if (found)
+		std::cout << name_query << " was found.\n";
+	else
+		std::cout << name_query << " was not found.\n";
 
 	return 0;
 }
