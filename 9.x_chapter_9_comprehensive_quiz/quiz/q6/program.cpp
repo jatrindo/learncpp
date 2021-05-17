@@ -202,17 +202,15 @@ void printDeck(const DeckInfo::deck_t& deck)
 // Answer for e) -- End
 
 // Answer for f) -- Start
-// Namespace for PRNG things
-namespace DeckPRNG
-{
-	// Mersenne Twister PRNG for shuffling the deck, seeded with the current time
-	std::mt19937 shuffle_mersenne{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
-}
-
 void shuffleDeck(DeckInfo::deck_t& deck)
 {
+	// Initialize (once, via 'static') PRNG
+	static std::mt19937 shuffle_mersenne{
+		static_cast<std::mt19937::result_type>(std::time(nullptr))
+	};
+
 	// Shuffle
-	std::shuffle(deck.begin(), deck.end(), DeckPRNG::shuffle_mersenne);
+	std::shuffle(deck.begin(), deck.end(), shuffle_mersenne);
 }
 // Answer for f) -- End
 
