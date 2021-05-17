@@ -92,63 +92,29 @@ void printCard(const Card& card)
 
 	switch (card.rank)
 	{
-		case CardRank::two:
-			rank_code = '2';
-			break;
-		case CardRank::three:
-			rank_code = '3';
-			break;
-		case CardRank::four:
-			rank_code = '4';
-			break;
-		case CardRank::five:
-			rank_code = '5';
-			break;
-		case CardRank::six:
-			rank_code = '6';
-			break;
-		case CardRank::seven:
-			rank_code = '7';
-			break;
-		case CardRank::eight:
-			rank_code = '8';
-			break;
-		case CardRank::nine:
-			rank_code = '9';
-			break;
-		case CardRank::ten:
-			rank_code = 'T';
-			break;
-		case CardRank::jack:
-			rank_code = 'J';
-			break;
-		case CardRank::queen:
-			rank_code = 'Q';
-			break;
-		case CardRank::king:
-			rank_code = 'K';
-			break;
-		case CardRank::ace:
-			rank_code = 'A';
-			break;
+		case CardRank::two:	rank_code = '2'; break;
+		case CardRank::three:	rank_code = '3'; break;
+		case CardRank::four:	rank_code = '4'; break;
+		case CardRank::five:	rank_code = '5'; break;
+		case CardRank::six:	rank_code = '6'; break;
+		case CardRank::seven:	rank_code = '7'; break;
+		case CardRank::eight:	rank_code = '8'; break;
+		case CardRank::nine:	rank_code = '9'; break;
+		case CardRank::ten:	rank_code = 'T'; break;
+		case CardRank::jack:	rank_code = 'J'; break;
+		case CardRank::queen:	rank_code = 'Q'; break;
+		case CardRank::king:	rank_code = 'K'; break;
+		case CardRank::ace:	rank_code = 'A'; break;
 		default:
 			rank_code = '?';
 	}
 
 	switch (card.suit)
 	{
-		case CardSuit::clubs:
-			suit_code = 'C';
-			break;
-		case CardSuit::diamonds:
-			suit_code = 'D';
-			break;
-		case CardSuit::hearts:
-			suit_code = 'H';
-			break;
-		case CardSuit::spades:
-			suit_code = 'S';
-			break;
+		case CardSuit::clubs:		suit_code = 'C'; break;
+		case CardSuit::diamonds:	suit_code = 'D'; break;
+		case CardSuit::hearts:		suit_code = 'H'; break;
+		case CardSuit::spades:		suit_code = 'S'; break;
 		default:
 			suit_code = '?';
 	}
@@ -235,7 +201,7 @@ int getCardValue(const Card& card)
 					value = 10; break;
 		case CardRank::ace:	value = 11; break;
 		default:
-			value = 0;
+			value = 0; // Should never happen
 	}
 	return value;
 }
