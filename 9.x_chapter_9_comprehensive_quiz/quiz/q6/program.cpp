@@ -189,7 +189,7 @@ DeckInfo::deck_t createDeck()
 // Answer for e) -- Start
 void printDeck(const DeckInfo::deck_t& deck)
 {
-	for (const Card& card: deck)
+	for (const auto& card: deck)
 	{
 		printCard(card);
 		std::cout << ' ';
