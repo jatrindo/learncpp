@@ -25,9 +25,10 @@
 // the compiler.
 //
 // Reference: learncpp.com, chapter 9.2
-namespace Items
+namespace ItemTypes
 {
-	enum
+	// not necessary to have a name for the below enum since I don't use it
+	enum ItemTypes
 	{
 		health_potion,
 		torches,
@@ -37,7 +38,9 @@ namespace Items
 	};
 }
 
-int countTotalItems(std::array<int, Items::max_items>& inventory)
+using inventory_type = std::array<int, ItemTypes::max_items>;
+
+int countTotalItems(const inventory_type& inventory)
 {
 	// std::reduce not available, fall back to std::accumulate
 	return std::accumulate(inventory.begin(), inventory.end(), 0);
@@ -45,16 +48,18 @@ int countTotalItems(std::array<int, Items::max_items>& inventory)
 
 int main()
 {
-	std::array<int, Items::max_items> inventory{};
-	inventory[Items::health_potion] = 2;
-	inventory[Items::torches] = 5;
-	inventory[Items::arrows] = 10;
+	inventory_type inventory{};
+
+	// Items instantiated this way so that order of enums doesn't matter
+	inventory[ItemTypes::health_potion] = 2;
+	inventory[ItemTypes::torches] = 5;
+	inventory[ItemTypes::arrows] = 10;
 
 	std::cout << "Number of total items: "
 		  << countTotalItems(inventory) << '\n';
 
 	std::cout << "Number of torches: "
-		  << inventory[Items::torches] << '\n';
+		  << inventory[ItemTypes::torches] << '\n';
 
 	return 0;
 }
