@@ -37,6 +37,8 @@
  * Ace is worth 11).
 */
 #include <iostream>
+#include <array>
+#include <cstddef> // std::size_t
 
 // Answer for a) -- Start
 enum class CardRank
@@ -151,7 +153,35 @@ void printCard(const Card& card)
 	std::cout << rank_code << suit_code;
 }
 // Answer for c) -- End
+
+// Answer for d) -- Start
+// Don't want to pollute the global namespace, so the following deck info
+// is put in its own namespace
+namespace DeckInfo
+{
+	constexpr int num_cards{ static_cast<int>(CardRank::max_ranks) * static_cast<int>(CardSuit::max_suits) };
+	using deck_type = std::array<Card, num_cards>;
+}
+
+DeckInfo::deck_type createDeck()
+{
+	DeckInfo::deck_type deck{};
+
+	std::size_t card_index{ 0 };
+	for (int rank{ 0 }; rank < static_cast<int>(CardRank::max_ranks); ++rank)
+	{
+		for (int suit{ 0 }; suit < static_cast<int>(CardSuit::max_suits); ++suit)
+		{
+			deck[card_index] = Card{ static_cast<CardRank>(rank), static_cast<CardSuit>(suit) };
+			++card_index;
+		}
+	}
+
+	return deck;
+}
+// Answer for d) -- End
 int main()
 {
+	DeckInfo::deck_type deck{ createDeck() };
 	return 0;
 }
