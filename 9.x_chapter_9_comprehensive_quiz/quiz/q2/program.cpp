@@ -62,7 +62,7 @@ void checkCinAndClearBuffer()
 }
 
 // Loops until a name string has been successfully extracted
-std::string askName(const std::string_view prompt)
+std::string askString(const std::string_view& prompt)
 {
 	while(true)
 	{
@@ -82,7 +82,7 @@ std::string askName(const std::string_view prompt)
 
 // Loops until a number within range [min, max] is successfully entered
 // Failed extractions result in a grade of 0
-int askNumInRange(int min, int max, const std::string_view prompt)
+int askIntInRange(int min, int max, const std::string_view& prompt)
 {
 	while (true)
 	{
@@ -99,16 +99,48 @@ int askNumInRange(int min, int max, const std::string_view prompt)
 	}
 }
 
-Student askStudent()
+// Althought 0 isn't positive, we'll accept it
+int askPositiveInt(const std::string_view& prompt)
+{
+	while (true)
+	{
+		std::cout << prompt;
+		int i{};
+		std::cin >> i;
+
+		checkCinAndClearBuffer();
+
+		if (i >= 0)
+			return i;
+
+		std::cout << "Invalid input\n";
+	}
+}
+
+std::string askName()
+{
+	return askString("Enter the student's name: ");
+}
+
+int askGrade()
 {
 	const int minGrade{ 0 };
 	const int maxGrade { 100 };
+	return askIntInRange(minGrade, maxGrade,
+			"Enter a grade (0 to 100, inclusive): ");
+}
 
+Student askStudent()
+{
 	Student s{};
-	s.name = askName("Enter the student's name: ");
-	s.grade = askNumInRange(minGrade, maxGrade,
-				"Enter a grade (0 to 100, inclusive): ");
+	s.name = askName();
+	s.grade = askGrade();
 	return s;
+}
+
+int askNumStudents()
+{
+	return askPositiveInt("How many students do you want to enter?: ");
 }
 
 void printStudentInfo(Student& student)
@@ -125,14 +157,11 @@ bool hasHigherGrade(Student& s1, Student &s2)
 
 int main()
 {
-
-	std::cout << "How many students do you want to enter?: ";
-	std::size_t numStudents{};
-	std::cin >> numStudents;
+	int numStudents{ askNumStudents() };
 
 	std::cout << "Okay! Asking for " << numStudents << " students\n";
 
-	std::vector<Student> students(numStudents);
+	std::vector<Student> students(static_cast<std::size_t>(numStudents));
 
 	// Read in each student in to the vector
 	for (auto ptr{ students.begin() }; ptr != students.end(); ++ptr)
