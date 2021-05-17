@@ -36,3 +36,39 @@
  * (e.g. a 2 is worth 2, a then, jack, queen, or king, is worth 10. Assume an
  * Ace is worth 11).
 */
+
+// Answer for a) -- Start
+enum class CardRank
+{
+	two,
+	three,
+	four,
+	five,
+	six,
+	seven,
+	eight,
+	nine,
+	ten,
+	jack,
+	queen,
+	king,
+	ace,
+
+	max_ranks
+};
+
+enum class CardSuit
+{
+	clubs,
+	diamonds,
+	hearts,
+	spades,
+
+	max_suits
+};
+// Answer for a) -- End
+
+int main()
+{
+	return 0;
+}
