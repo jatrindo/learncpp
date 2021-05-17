@@ -214,6 +214,33 @@ void shuffleDeck(DeckInfo::deck_t& deck)
 }
 // Answer for f) -- End
 
+// Answer for g) -- Start
+int getCardValue(const Card& card)
+{
+	int value{};
+	switch (card.rank)
+	{
+		case CardRank::two:	value = 2; break;
+		case CardRank::three:	value = 3; break;
+		case CardRank::four:	value = 4; break;
+		case CardRank::five:	value = 5; break;
+		case CardRank::six:	value = 6; break;
+		case CardRank::seven:	value = 7; break;
+		case CardRank::eight:	value = 8; break;
+		case CardRank::nine:	value = 9; break;
+		case CardRank::ten:
+		case CardRank::jack:
+		case CardRank::queen:
+		case CardRank::king:
+					value = 10; break;
+		case CardRank::ace:	value = 11; break;
+		default:
+			value = 0;
+	}
+	return value;
+}
+// Answer for g) -- End
+
 int main()
 {
 	auto deck{ createDeck() };
