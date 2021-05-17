@@ -36,6 +36,7 @@
  * (e.g. a 2 is worth 2, a then, jack, queen, or king, is worth 10. Assume an
  * Ace is worth 11).
 */
+#include <iostream>
 
 // Answer for a) -- Start
 enum class CardRank
@@ -77,6 +78,79 @@ struct Card
 
 // Answer for b) -- End
 
+// Answer for c) -- Start
+// Prints two-letter code indicating card rank and suit
+void printCard(const Card& card)
+{
+	char rank_code{};
+	char suit_code{};
+
+	switch (card.rank)
+	{
+		case CardRank::two:
+			rank_code = '2';
+			break;
+		case CardRank::three:
+			rank_code = '3';
+			break;
+		case CardRank::four:
+			rank_code = '4';
+			break;
+		case CardRank::five:
+			rank_code = '5';
+			break;
+		case CardRank::six:
+			rank_code = '6';
+			break;
+		case CardRank::seven:
+			rank_code = '7';
+			break;
+		case CardRank::eight:
+			rank_code = '8';
+			break;
+		case CardRank::nine:
+			rank_code = '9';
+			break;
+		case CardRank::ten:
+			rank_code = 'T';
+			break;
+		case CardRank::jack:
+			rank_code = 'J';
+			break;
+		case CardRank::queen:
+			rank_code = 'A';
+			break;
+		case CardRank::king:
+			rank_code = 'K';
+			break;
+		case CardRank::ace:
+			rank_code = 'A';
+			break;
+		default:
+			rank_code = '?';
+	}
+
+	switch (card.suit)
+	{
+		case CardSuit::clubs:
+			suit_code = 'C';
+			break;
+		case CardSuit::diamonds:
+			suit_code = 'D';
+			break;
+		case CardSuit::hearts:
+			suit_code = 'H';
+			break;
+		case CardSuit::spades:
+			suit_code = 'S';
+			break;
+		default:
+			suit_code = '?';
+	}
+
+	std::cout << rank_code << suit_code;
+}
+// Answer for c) -- End
 int main()
 {
 	return 0;
