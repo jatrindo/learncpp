@@ -68,6 +68,15 @@ enum class CardSuit
 };
 // Answer for a) -- End
 
+// Answer for b) -- Start
+struct Card
+{
+	CardRank rank;
+	CardSuit suit;
+};
+
+// Answer for b) -- End
+
 int main()
 {
 	return 0;
