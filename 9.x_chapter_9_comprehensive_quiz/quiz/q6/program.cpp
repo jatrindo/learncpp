@@ -39,6 +39,9 @@
 #include <iostream>
 #include <array>
 #include <cstddef> // std::size_t
+#include <random> // std::mt19937
+#include <ctime> // std::time
+#include <algorithm> // std::shuffle
 
 // Answer for a) -- Start
 enum class CardRank
@@ -159,8 +162,8 @@ void printCard(const Card& card)
 // is put in its own namespace
 namespace DeckInfo
 {
-	constexpr int num_cards{ static_cast<int>(CardRank::max_ranks) * static_cast<int>(CardSuit::max_suits) };
-	using deck_t = std::array<Card, num_cards>;
+	constexpr int num_cards_in_deck{ static_cast<int>(CardRank::max_ranks) * static_cast<int>(CardSuit::max_suits) };
+	using deck_t = std::array<Card, num_cards_in_deck>;
 	using deck_index_t = std::size_t;
 }
 
@@ -198,9 +201,25 @@ void printDeck(const DeckInfo::deck_t& deck)
 }
 // Answer for e) -- End
 
+// Answer for f) -- Start
+// Namespace for PRNG things
+namespace DeckPRNG
+{
+	// Mersenne Twister PRNG for shuffling the deck, seeded with the current time
+	std::mt19937 shuffle_mersenne{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
+}
+
+void shuffleDeck(DeckInfo::deck_t& deck)
+{
+	// Shuffle
+	std::shuffle(deck.begin(), deck.end(), DeckPRNG::shuffle_mersenne);
+}
+// Answer for f) -- End
+
 int main()
 {
 	auto deck{ createDeck() };
+	shuffleDeck(deck);
 	printDeck(deck);
 
 	return 0;
