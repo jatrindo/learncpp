@@ -9,10 +9,10 @@
 */
 #include <iostream>
 
-void printCStyleString(char str[])
+void printCStyleString(const char str[])
 {
-	for (char* ptr{ str }; *ptr != '\0'; ++ptr)
-		std::cout << *ptr;
+	for (; *str != '\0'; ++str)
+		std::cout << *str;
 }
 
 int main()
