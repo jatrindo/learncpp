@@ -120,7 +120,7 @@ void printCard(const Card& card)
 			rank_code = 'J';
 			break;
 		case CardRank::queen:
-			rank_code = 'A';
+			rank_code = 'Q';
 			break;
 		case CardRank::king:
 			rank_code = 'K';
@@ -172,9 +172,9 @@ DeckInfo::deck_t createDeck()
 	int num_ranks{ static_cast<int>(CardRank::max_ranks) };
 	int num_suites{ static_cast<int>(CardSuit::max_suits) };
 
-	for (int rank{ 0 }; rank < num_ranks; ++rank)
+	for (int suit{ 0 }; suit < num_suites; ++suit)
 	{
-		for (int suit{ 0 }; suit < num_suites; ++suit)
+		for (int rank{ 0 }; rank < num_ranks; ++rank)
 		{
 			deck[card_index].suit = static_cast<CardSuit>(suit);
 			deck[card_index].rank = static_cast<CardRank>(rank);
@@ -185,8 +185,23 @@ DeckInfo::deck_t createDeck()
 	return deck;
 }
 // Answer for d) -- End
+
+// Answer for e) -- Start
+void printDeck(const DeckInfo::deck_t& deck)
+{
+	for (const Card& card: deck)
+	{
+		printCard(card);
+		std::cout << ' ';
+	}
+	std::cout << '\n';
+}
+// Answer for e) -- End
+
 int main()
 {
 	auto deck{ createDeck() };
+	printDeck(deck);
+
 	return 0;
 }
