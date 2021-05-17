@@ -160,19 +160,24 @@ void printCard(const Card& card)
 namespace DeckInfo
 {
 	constexpr int num_cards{ static_cast<int>(CardRank::max_ranks) * static_cast<int>(CardSuit::max_suits) };
-	using deck_type = std::array<Card, num_cards>;
+	using deck_t = std::array<Card, num_cards>;
+	using deck_index_t = std::size_t;
 }
 
-DeckInfo::deck_type createDeck()
+DeckInfo::deck_t createDeck()
 {
-	DeckInfo::deck_type deck{};
+	DeckInfo::deck_t deck{};
 
-	std::size_t card_index{ 0 };
-	for (int rank{ 0 }; rank < static_cast<int>(CardRank::max_ranks); ++rank)
+	DeckInfo::deck_index_t card_index{ 0 };
+	int num_ranks{ static_cast<int>(CardRank::max_ranks) };
+	int num_suites{ static_cast<int>(CardSuit::max_suits) };
+
+	for (int rank{ 0 }; rank < num_ranks; ++rank)
 	{
-		for (int suit{ 0 }; suit < static_cast<int>(CardSuit::max_suits); ++suit)
+		for (int suit{ 0 }; suit < num_suites; ++suit)
 		{
-			deck[card_index] = Card{ static_cast<CardRank>(rank), static_cast<CardSuit>(suit) };
+			deck[card_index].suit = static_cast<CardSuit>(suit);
+			deck[card_index].rank = static_cast<CardRank>(rank);
 			++card_index;
 		}
 	}
@@ -182,6 +187,6 @@ DeckInfo::deck_type createDeck()
 // Answer for d) -- End
 int main()
 {
-	DeckInfo::deck_type deck{ createDeck() };
+	auto deck{ createDeck() };
 	return 0;
 }
