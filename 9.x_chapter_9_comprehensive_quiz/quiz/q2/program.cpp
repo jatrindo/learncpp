@@ -38,6 +38,8 @@
 #include <iostream>
 #include <algorithm> // std::sort
 #include <vector>
+#include <string>
+#include <cstddef>
 
 struct Student
 {
@@ -155,32 +157,45 @@ bool hasHigherGrade(Student& s1, Student &s2)
 	return s1.grade > s2.grade;
 }
 
-int main()
+std::vector<Student> askForNStudents(int n)
 {
-	int numStudents{ askNumStudents() };
-
-	std::cout << "Okay! Asking for " << numStudents << " students\n";
-
-	std::vector<Student> students(static_cast<std::size_t>(numStudents));
+	std::vector<Student> students(static_cast<std::size_t>(n));
 
 	// Read in each student in to the vector
-	for (auto ptr{ students.begin() }; ptr != students.end(); ++ptr)
+	for (auto& student: students)
 	{
-		*ptr = askStudent();
+		student = askStudent();
 	}
 
-	// Sort the list
-	std::sort(students.begin(), students.end(), hasHigherGrade);
+	return students;
+}
 
-	// Newline to separate the input from the output
-
-	std::cout << '\n';
+void printStudents(std::vector<Student>& students)
+{
 	// Print out each student's information
-	for (Student student: students)
+	for (Student& student: students)
 	{
 		printStudentInfo(student);
 	}
+}
 
+int main()
+{
+	// Ask for the number of students to enter
+	int numStudents{ askNumStudents() };
+	std::cout << "Okay! Asking for " << numStudents << " students\n";
+
+	// Enter the info for all n students
+	auto students{ askForNStudents(numStudents) };
+
+	// Sort the students list
+	std::sort(students.begin(), students.end(), hasHigherGrade);
+
+	// Newline to separate the input from the output
+	std::cout << '\n';
+
+	// Print out the student's information
+	printStudents(students);
 
 	return 0;
 }
