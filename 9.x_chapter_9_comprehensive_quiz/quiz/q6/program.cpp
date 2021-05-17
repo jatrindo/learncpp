@@ -71,8 +71,8 @@ enum class CardSuit
 // Answer for b) -- Start
 struct Card
 {
-	CardRank rank;
-	CardSuit suit;
+	CardRank rank{};
+	CardSuit suit{};
 };
 
 // Answer for b) -- End
