@@ -6,18 +6,25 @@
 
 #include "card.h"
 
-// Don't want to pollute the global namespace, so the following deck info
-// is put in its own namespace
-namespace DeckInfo
-{
-	constexpr int num_cards_in_deck_t{ static_cast<int>(CardRank::max_ranks) * static_cast<int>(CardSuit::max_suits) };
-	using deck_t = std::array<Card, num_cards_in_deck_t>;
-	using deck_index_t = std::size_t;
-}
+constexpr int num_cards_in_deck_t{ static_cast<int>(CardRank::max_ranks) * static_cast<int>(CardSuit::max_suits) };
 
-// Prototypes
-DeckInfo::deck_t createDeck();
-void printDeck(const DeckInfo::deck_t& deck);
-void shuffleDeck(DeckInfo::deck_t& deck);
+struct deck_t
+{
+	std::array<Card, num_cards_in_deck_t> cards{};
+	std::size_t next_card_index{ 0 };
+};
+
+namespace Deck
+{
+
+	// Creates an unshuffled deck
+	deck_t createDeck();
+	// Prints the deck cards in order, from beginning to end
+	void printDeck(const deck_t& deck);
+	// Shuffles the cards in the deck
+	void shuffleDeck(deck_t& deck);
+	// Draws a card from the specified deck
+	Card drawCard(deck_t& deck);
+}
 
 #endif // DECK_H

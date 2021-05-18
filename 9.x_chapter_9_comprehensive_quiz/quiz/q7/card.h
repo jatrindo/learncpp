@@ -30,12 +30,14 @@ enum class CardSuit
 	max_suits
 };
 
+// TD: Change to card_t
 struct Card
 {
 	CardRank rank{};
 	CardSuit suit{};
 };
 
+// TD: Enclose this in a 'Card' namespace
 // Prototypes
 void printCard(const Card& card);
 int getCardValue(const Card& card);

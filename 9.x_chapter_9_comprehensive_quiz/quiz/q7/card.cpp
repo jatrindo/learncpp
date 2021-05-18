@@ -2,6 +2,8 @@
 
 #include "card.h"
 
+// TD: Enclose all functions in a 'Card' namespace
+
 // Prints two-letter code indicating card rank and suit
 void printCard(const Card& card)
 {

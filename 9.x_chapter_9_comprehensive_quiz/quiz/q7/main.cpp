@@ -20,12 +20,19 @@
 #include <iostream>
 
 #include "deck.h"
+#include "blackjack.h"
 
 int main()
 {
-	auto deck{ createDeck() };
-	shuffleDeck(deck);
-	printDeck(deck);
+	// Create and shuffle a deck
+	auto deck{ Deck::createDeck() };
+	Deck::shuffleDeck(deck);
+
+	// Play some Blackjack
+	if (playBlackjack(deck))
+		std::cout << "The player won the game of Blackjack!\n";
+	else
+		std::cout << "The player lost the game of Blackjack :(\n";
 
 	return 0;
 }
