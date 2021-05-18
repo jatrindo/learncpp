@@ -17,3 +17,15 @@
  *
  * Also, write a main() function to play a single game of Blackjack.
 */
+#include <iostream>
+
+#include "deck.h"
+
+int main()
+{
+	auto deck{ createDeck() };
+	shuffleDeck(deck);
+	printDeck(deck);
+
+	return 0;
+}
