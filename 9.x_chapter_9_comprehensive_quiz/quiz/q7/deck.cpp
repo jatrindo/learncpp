@@ -33,7 +33,7 @@ namespace Deck
 	{
 		for (const auto& card: deck.cards)
 		{
-			printCard(card);
+			Card::printCard(card);
 			std::cout << ' ';
 		}
 		std::cout << '\n';
@@ -50,7 +50,7 @@ namespace Deck
 		std::shuffle(deck.cards.begin(), deck.cards.end(), shuffle_mersenne);
 	}
 
-	Card drawCard(deck_t& deck)
+	card_t drawCard(deck_t& deck)
 	{
 		return deck.cards[deck.next_card_index++];
 	}

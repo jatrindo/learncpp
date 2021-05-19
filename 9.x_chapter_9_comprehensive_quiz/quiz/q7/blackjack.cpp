@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include "blackjack.h"
 #include "player.h"
@@ -9,6 +10,94 @@ const std::string dealer_name{ "DEALER" };
 constexpr int bust_limit{ 21 };
 constexpr int dealer_stand_limit{ 17 };
 
+// Imported from Q2 solution
+// Checks the status of cin and clears its buffer
+void checkCinAndClearBuffer()
+{
+        if (std::cin.eof())
+		std::exit(0); // User closed the stream. Exit the program
+
+
+	if (std::cin.fail())
+		std::cin.clear(); // Extraction failed, clear out error flags
+
+	// Regardless of failure, ignore any extraneous characters still left
+	// in the buffer so that the next extraction won't be affected
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
+void reportPlayerTurn(player_t& player)
+{
+	std::cout << "===== " << player.name << "'s turn =====\n";
+}
+
+// true if the player's hand bust
+bool checkBusted(player_t& player)
+{
+	int hand_value{ Hand::getHandValue(player.hand) };
+	std::cout << player.name << "'s current hand value: "
+		  << hand_value << '\n';
+	if (hand_value > bust_limit)
+	{
+		std::cout << player.name << " has BUST!\n";
+		return true;
+	}
+	return false;
+}
+
+void declareWinner(player_t& player)
+{
+	std::cout << "===== " << player.name << " wins! =====\n";
+}
+
+
+int doHit(player_t& player, deck_t& deck)
+{
+	// Player wants to hit, so have them draw a card and return their
+	// updated hand value
+	card_t card{ Player::drawCardFromDeck(player, deck) };
+	int updated_value { Hand::getHandValue(player.hand) };
+
+	// Report the hit
+	std::cout << player.name << " hits, drawing a ";
+	Card::printCard(card);
+	std::cout << " (value = " << Card::getCardValue(card)
+		  << "), bringing their total to "
+		  << updated_value << '\n';
+
+        return updated_value;
+}
+
+void doStand(player_t& player)
+{
+	std::cout << player.name << " stands\n";
+}
+
+// Returns true if the player will continue
+// Returns false if the player will not continue (either chooses to stand
+// or busts)
+bool askHitOrStand(player_t& player, deck_t& deck)
+{
+	checkBusted(player);
+
+	char response{};
+	do
+	{
+		std::cout << "Would you like to [h]it or [s]tand?: ";
+		std::cin >> response;
+		checkCinAndClearBuffer();
+	} while (response != 'h' && response != 's');
+
+	if (response == 'h')
+	{
+		return (doHit(player, deck) <= bust_limit);
+	}
+
+	// The player chose not to continue
+	doStand(player);
+	return false;
+}
+
 bool playBlackjack(deck_t& deck)
 {
 	// Initialize players
@@ -18,46 +107,41 @@ bool playBlackjack(deck_t& deck)
 	dealer.name = dealer_name;
 
 	// PLAYER'S TURN
+	reportPlayerTurn(player);
 	// Player gets two cards to start
 	Player::drawCardFromDeck(player, deck);
 	Player::drawCardFromDeck(player, deck);
 
-	return false;
+	// Ask the player to hit or stand until they either stand or bust
+	while (askHitOrStand(player, deck)) {}
 
-	// TD: Implement the below
+	if (checkBusted(player))
+	{
+		declareWinner(dealer);
+		return false;
+	}
 
-	//// Player does their thing (ask input from user to hit or stand)
-	//// returns true if the player hits and wants to continue
-	//// returns false if the player stands or busts, ending their turn
-	//askPlayerToHitOrStand(player);
+	// DEALER'S TURN
+	reportPlayerTurn(dealer);
 
+	// Dealer gets one card to start
+	Player::drawCardFromDeck(dealer, deck);
 
-	//// DEALER'S TURN
-	//// Dealer gets one card to start
-	//drawCardForPlayer(dealer);
+	// This call is just to report the dealer's current hand score
+	checkBusted(dealer);
 
-	//// Dealer auto-plays (repeatedly draws until they reach a score of 17
-	//// or more, at which point they stand)
-	//while (getSumOfHand(dealer) <= dealer_stand_limit) {
-	//	player_hit(dealer);
-	//}
+	while(doHit(dealer, deck) < dealer_stand_limit) {}
 
-	//// Did the dealer bust?
-	//if (getSumOfHand(dealer) > bust_limit)
-	//{
-	//	// player wins!
-	//	return declareWinner(player);
-	//}
-	//else
-	//{
-	//	// dealer stands
-	//	player_stand(dealer);
-	//}
+	if (checkBusted(dealer))
+	{
+		declareWinner(player);
+		return true;
+	}
 
-	//// neither the player nor dealer busted, see who wins
-	//if (getSumOfHand(player) > getSumOfHand(dealer))
-	//	return declareWinner(player);
-	//else
-	//	return declareWinner(dealer);
+	// If the dealer didn't bust, than they stand
+	doStand(dealer);
+
+	// At this point neither player busted, so compare the score to see
+	// who won
+	return (Hand::getHandValue(player.hand) > Hand::getHandValue(dealer.hand));
 }
-

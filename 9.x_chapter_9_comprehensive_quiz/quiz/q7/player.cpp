@@ -4,9 +4,11 @@
 
 namespace Player
 {
-	void drawCardFromDeck(player_t& player, deck_t& deck)
+	card_t drawCardFromDeck(player_t& player, deck_t& deck)
 	{
 		// Draw card from deck and put into player's hand
-		Hand::addCard(Deck::drawCard(deck), player.hand);
+		card_t card{ Deck::drawCard(deck) };
+		Hand::addCard(card, player.hand);
+		return card;
 	}
 }

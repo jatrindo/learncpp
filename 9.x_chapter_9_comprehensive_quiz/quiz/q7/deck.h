@@ -10,7 +10,7 @@ constexpr int num_cards_in_deck_t{ static_cast<int>(CardRank::max_ranks) * stati
 
 struct deck_t
 {
-	std::array<Card, num_cards_in_deck_t> cards{};
+	std::array<card_t, num_cards_in_deck_t> cards{};
 	std::size_t next_card_index{ 0 };
 };
 
@@ -24,7 +24,7 @@ namespace Deck
 	// Shuffles the cards in the deck
 	void shuffleDeck(deck_t& deck);
 	// Draws a card from the specified deck
-	Card drawCard(deck_t& deck);
+	card_t drawCard(deck_t& deck);
 }
 
 #endif // DECK_H

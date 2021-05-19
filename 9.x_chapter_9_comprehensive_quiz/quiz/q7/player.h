@@ -15,6 +15,6 @@ struct player_t
 namespace Player
 {
 	// Have the player draw a card from the specified deck
-	void drawCardFromDeck(player_t& player, deck_t& deck);
+	card_t drawCardFromDeck(player_t& player, deck_t& deck);
 }
 #endif // PLAYER_H
