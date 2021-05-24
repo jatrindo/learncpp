@@ -19,3 +19,37 @@
  * 1e) Modify your main() function to call getArithmeticFunction(). Call the
  * return value from that function with you inputs and print the result.
 */
+#include <iostream>
+
+int askInt()
+{
+	std::cout << "Enter an integer: ";
+	int i{};
+	std::cin >> i;
+	return i;
+}
+
+bool isMathOp(char c)
+{
+	return (c == '+' || c == '-' || c ==  '*' || c == '/');
+}
+
+char askMathOp()
+{
+	char c{};
+	do
+	{
+		std::cout << "Enter a math operation ('+', '-', '*', '/'): ";
+		std::cin >> c;
+	}
+	while (!isMathOp(c));
+
+	return c;
+}
+
+int main()
+{
+	int a{ askInt() };
+	char op{ askMathOp() };
+	int b{ askInt() };
+}
