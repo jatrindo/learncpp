@@ -45,6 +45,19 @@ int divide(int a, int b)
 	return a / b;
 }
 
+ArithmeticFunction getArithmeticFunction(char op)
+{
+	switch (op)
+	{
+		case '+': return &add;
+		case '-': return &subtract;
+		case '*': return &multiply;
+		case '/': return &divide;
+		default:
+			  return &add;	// add by default
+	}
+}
+
 int askInt()
 {
 	std::cout << "Enter an integer: ";
