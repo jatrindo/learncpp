@@ -20,6 +20,10 @@
  * return value from that function with you inputs and print the result.
 */
 #include <iostream>
+#include <functional>
+
+//using ArithmeticFunction = int (*)(int, int);  // non-std::function way
+using ArithmeticFunction = std::function<int(int, int)>;
 
 int add(int a, int b)
 {
