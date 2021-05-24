@@ -89,4 +89,11 @@ int main()
 	int a{ askInt() };
 	char op{ askMathOp() };
 	int b{ askInt() };
+
+	ArithmeticFunction opfunc{ getArithmeticFunction(op) };
+
+	std::cout << "Result is: " << opfunc(a, b) << '\n';
+	// std::cout << "Result is: " << (* opfunc)(a, b) << '\n'; // non-std::function way
+
+	return 0;
 }
