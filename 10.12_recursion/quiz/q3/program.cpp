@@ -1,8 +1,17 @@
 /*
- * Write a program tat asks the user to enter a positive integer, and then
+ * 3a) Write a program that asks the user to enter a positive integer, and then
  * uses a recursive function to print out the binary representation for that
  * number. Use method 1 from lesson O.4 -- Converting between binary and
  * decimal.
+ *
+ * 3b) Update your code from 3a) to handle the case where the user may enter 0
+ * or a negative number.
+ *
+ * Here's a sample output (assuming 32-bit integers):
+ *
+ * Enter an integer: -15
+ * 11111111111111111111111111110001
+ *
 */
 #include <iostream>
 
