@@ -9,15 +9,15 @@
 // Prints the binary representation of i
 void printBinRep(int i)
 {
+	// Base case
 	if (i == 0)
 		return;
 
+	// Recurse first
 	printBinRep(i / 2);
 
-	if (i % 2)
-		std::cout << '1';
-	else
-		std::cout << '0';
+	// Print the remainder
+	std::cout << (i % 2);
 }
 
 int askInteger()
