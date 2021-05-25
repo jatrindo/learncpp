@@ -18,12 +18,9 @@
 // Prints the binary representation of i
 void printBinRep(unsigned int i)
 {
-	// Base case
-	if (i == 0)
-		return;
-
-	// Recurse first
-	printBinRep(i / 2);
+	// Base case (when i == 0, we stop recursing but still print
+	if (i > 1)
+		printBinRep(i / 2); // Recurse
 
 	// Print the remainder
 	std::cout << (i % 2);
