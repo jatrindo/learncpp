@@ -27,3 +27,43 @@
  *
  * 	Dan is the best student
 */
+#include <iostream>
+#include <array>
+#include <algorithm>
+
+struct Student
+{
+	std::string name{};
+	int points{ 0 };
+};
+
+int main()
+{
+	std::array<Student, 8> arr{
+		{
+			{ "Albert", 3 },
+			{ "Ben", 5 },
+			{ "Christine", 2 },
+			{ "Dan", 8 }, // Dan has the most points (8).
+			{ "Enchilada", 4 },
+			{ "Francis", 1 },
+			{ "Gred", 3 },
+			{ "Hagrid", 5 }
+		}
+	};
+
+	// Note: The function you give std::max_element has to be written such
+	// that is returns 'true' if the first argument is __less than__ the
+	// second
+	const auto most_points_student{
+		std::max_element(arr.begin(), arr.end(),
+				[](const Student& first, const Student& second) -> bool
+				{
+					return first.points < second.points;
+				})
+	};
+
+	std::cout << most_points_student->name << " is the best student\n";
+
+	return 0;
+}
