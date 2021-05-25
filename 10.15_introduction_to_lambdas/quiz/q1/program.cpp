@@ -57,12 +57,13 @@ int main()
 	// second
 	const auto most_points_student{
 		std::max_element(arr.begin(), arr.end(),
-				[](const Student& first, const Student& second) -> bool
+				[](const auto& first, const auto& second) -> bool
 				{
 					return first.points < second.points;
 				})
 	};
 
+	// Note: std::max_element returns an iterator
 	std::cout << most_points_student->name << " is the best student\n";
 
 	return 0;
