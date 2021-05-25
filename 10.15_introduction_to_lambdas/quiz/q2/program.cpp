@@ -33,6 +33,16 @@ int main()
 	/*
 	 * Use std::sort here
 	*/
+	std::sort(seasons.begin(), seasons.end(),
+			[](const auto& s1, const auto& s2)
+			{
+				// Note: std::sort's comparison function
+				// expects 'true' returned if the first arg
+				// is 'less than' (i.e. 'ordered before') the
+				// second arg
+				return s1.averageTemperature < s2.averageTemperature;
+			}
+	);
 
 	for (const auto& season : seasons)
 	{
