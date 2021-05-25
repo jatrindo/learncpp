@@ -16,7 +16,7 @@
 #include <iostream>
 
 // Prints the binary representation of i
-void printBinRep(int i)
+void printBinRep(unsigned int i)
 {
 	// Base case
 	if (i == 0)
@@ -31,15 +31,9 @@ void printBinRep(int i)
 
 int askInteger()
 {
-	std::cout << "Enter a positive integer: ";
+	std::cout << "Enter an integer: ";
 	int i{};
 	std::cin >> i;
-
-	if (i < 0)
-	{
-		std::cout << "Value entered was negative. Flipping the sign\n";
-		i = -i;
-	}
 
 	return i;
 }
@@ -48,7 +42,7 @@ int main()
 {
 	int i{ askInteger() };
 	std::cout << "The binary representation of " << i << " is ";
-	printBinRep(i);
+	printBinRep(static_cast<unsigned int>(i));
 	std::cout << '\n';
 
 	return 0;
