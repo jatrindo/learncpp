@@ -2,5 +2,45 @@
  * Write a program tat asks the user to enter a positive integer, and then
  * uses a recursive function to print out the binary representation for that
  * number. Use method 1 from lesson O.4 -- Converting between binary and
- * decimal
+ * decimal.
 */
+#include <iostream>
+
+// Prints the binary representation of i
+void printBinRep(int i)
+{
+	if (i == 0)
+		return;
+
+	printBinRep(i / 2);
+
+	if (i % 2)
+		std::cout << '1';
+	else
+		std::cout << '0';
+}
+
+int askInteger()
+{
+	std::cout << "Enter a positive integer: ";
+	int i{};
+	std::cin >> i;
+
+	if (i < 0)
+	{
+		std::cout << "Value entered was negative. Flipping the sign\n";
+		i = -i;
+	}
+
+	return i;
+}
+
+int main()
+{
+	int i{ askInteger() };
+	std::cout << "The binary representation of " << i << " is ";
+	printBinRep(i);
+	std::cout << '\n';
+
+	return 0;
+}
