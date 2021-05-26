@@ -32,6 +32,27 @@
  * found, -1 otherwise
 */
 
+// Recursive solution for 3b
+int binarySearch(const int *array, int target, int min, int max)
+{
+	// Termination condition: invalid min, max
+	if (min > max)
+		return -1;
+
+	int center{ min + ((max - min) / 2) }; // this way of calculating midpoint avoids overflow
+
+	// Termination condition: found the target
+	if (array[center] == target)
+		return center;
+
+	// Determine which half of the array to search next
+	if (array[center] > target)
+		return binarySearch(array, target, min, center - 1); // Search bottom half
+	else
+		return binarySearch(array, target, center + 1, max); // Seach top half
+}
+
+/*
 // Iterative solution for 3a
 int binarySearch(const int *array, int target, int min, int max)
 {
@@ -66,6 +87,7 @@ int binarySearch(const int *array, int target, int min, int max)
 	// If we're here, we haven't found the element
 	return -1;
 }
+*/
 
 int main()
 {
