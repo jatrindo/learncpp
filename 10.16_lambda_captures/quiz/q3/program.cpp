@@ -57,3 +57,141 @@
  *
  * 	-----------------------------------------------------------------------
 */
+#include <iostream>
+#include <algorithm> // std::find
+#include <vector>
+#include <random> // std::mt19937
+#include <ctime> // std::time
+#include <cmath> // std::abs
+
+int askStart()
+{
+	std::cout << "Start where?: ";
+	int start{};
+	std::cin >> start;
+	return start;
+}
+
+int askHowMany()
+{
+	std::cout << "How many?: ";
+	int how_many{};
+	std::cin >> how_many;
+	return how_many;
+}
+
+int genRandomFactor()
+{
+	static std::mt19937 mersenne_gen{
+		static_cast<std::mt19937::result_type>(std::time(nullptr))
+	};
+
+	const int min{ 2 };
+	const int max{ 4 };
+	std::uniform_int_distribution die{min, max};
+
+	return die(mersenne_gen);
+}
+
+int askGuess()
+{
+	std::cout << "> ";
+	int guess{};
+	std::cin >> guess;
+	return guess;
+}
+
+// Initializes the squares array given as first argument
+void initFactoredSquares(std::vector<int>& squares, int start, int how_many, int factor)
+{
+	// Resize the array to fit the squares
+	squares.resize(static_cast<std::size_t>(how_many));
+
+	// Initialize the squares, already multiplied by the factor
+	for (int i{ 0 }; i < how_many; ++i)
+	{
+		int square{ (start + i) * (start + i) };
+		squares[static_cast<std::size_t>(i)] = square * factor;
+	}
+}
+
+// Given a vector, finds the element whose value is closest to val, returning
+// the value of that element
+int findClosestValue(std::vector<int>& vect, int val)
+{
+	auto closest{
+		std::min_element(vect.begin(), vect.end(),
+			[val](const int a, const int b) {
+				return std::abs(a - val) < std::abs(b - val);
+			})
+	};
+
+	if (closest == vect.end())
+		return 0;
+
+	return *closest;
+}
+
+int main()
+{
+
+	const int start{ askStart() };
+	const int how_many{ askHowMany() };
+	const int factor{ genRandomFactor() };
+
+	// Initialize the squares, already multiplied by the factor
+	std::vector<int> squares{};
+	initFactoredSquares(squares, start, how_many, factor);
+
+	// Report to users
+	std::cout << "I generated " << how_many << " square numbers. Do you "
+		  "know what each number is after multiplying it by " << factor
+		  << "?\n";
+
+	// Guessing loop
+	for (int turns_left{ how_many }; turns_left > 0; --turns_left)
+	{
+		// Ask for the user's guess
+		int guess{ askGuess() };
+
+		// See if the user's guess is in the factored_squares
+		auto found{ std::find(squares.begin(), squares.end(), guess) };
+		if (found != squares.end())
+		{
+			// User's guess found!
+			if (turns_left - 1 > 0)
+			{
+				std::cout << "Nice! " << (turns_left - 1) << " number(s) left.\n";
+				// Remove the correct guess from the squares list
+				squares.erase(found);
+			}
+			else
+			{
+				std::cout << "Nice! You found all the numbers, good job!\n";
+				// End the game
+				break;
+			}
+		}
+		else
+		{
+			std::cout << guess << " is wrong!";
+
+			// Find the factored square closest to the user's guess
+			int closest_factored_square{ findClosestValue(squares, guess) };
+			if (std::abs(closest_factored_square - guess) <= 4)
+			{
+				std::cout << " Try " << closest_factored_square
+					  << " next time.\n";
+			}
+			else
+			{
+				std::cout << '\n';
+			}
+
+			// One wrong guess ends the game
+			break;
+		}
+	}
+
+	return 0;
+}
