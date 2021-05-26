@@ -64,6 +64,15 @@
 #include <ctime> // std::time
 #include <cmath> // std::abs
 
+using list_t = std::vector<int>;
+
+namespace Config
+{
+	constexpr int factorMin{ 2 };
+	constexpr int factorMax{ 4 };
+	constexpr int distForHint{ 4 };
+}
+
 int askStart()
 {
 	std::cout << "Start where?: ";
@@ -86,9 +95,7 @@ int genRandomFactor()
 		static_cast<std::mt19937::result_type>(std::time(nullptr))
 	};
 
-	const int min{ 2 };
-	const int max{ 4 };
-	std::uniform_int_distribution die{min, max};
+	std::uniform_int_distribution die{Config::factorMin, Config::factorMax};
 
 	return die(mersenne_gen);
 }
@@ -102,22 +109,22 @@ int askGuess()
 }
 
 // Initializes the squares array given as first argument
-void initFactoredSquares(std::vector<int>& squares, int start, int how_many, int factor)
+void initFactoredSquares(list_t& squares, int start, int how_many, int factor)
 {
 	// Resize the array to fit the squares
 	squares.resize(static_cast<std::size_t>(how_many));
 
-	// Initialize the squares, already multiplied by the factor
-	for (int i{ 0 }; i < how_many; ++i)
+	int i{ start };
+	for (auto& square: squares)
 	{
-		int square{ (start + i) * (start + i) };
-		squares[static_cast<std::size_t>(i)] = square * factor;
+		square = (( i * i ) * factor);
+		++i;
 	}
 }
 
-// Given a vector, finds the element whose value is closest to val, returning
-// the value of that element
-int findClosestValue(std::vector<int>& vect, int val)
+// Returns value of the element that is the closest numerical distance to val
+// across all elements of vect
+int findClosestValue(list_t& vect, int val)
 {
 	auto closest{
 		std::min_element(vect.begin(), vect.end(),
@@ -126,10 +133,24 @@ int findClosestValue(std::vector<int>& vect, int val)
 			})
 	};
 
+	// Array was empty
 	if (closest == vect.end())
 		return 0;
 
 	return *closest;
+}
+
+// Returns true if found and removed, false otherwise
+bool findAndRemove(list_t& vect, int val)
+{
+	auto found{ std::find(vect.begin(), vect.end(), val) };
+
+	if (found == vect.end())
+		return false; // Not found
+
+	// Found, so remove
+	vect.erase(found);
+	return true;
 }
 
 int main()
@@ -140,7 +161,7 @@ int main()
 	const int factor{ genRandomFactor() };
 
 	// Initialize the squares, already multiplied by the factor
-	std::vector<int> squares{};
+	list_t squares{};
 	initFactoredSquares(squares, start, how_many, factor);
 
 	// Report to users
@@ -149,21 +170,18 @@ int main()
 		  << "?\n";
 
 	// Guessing loop
-	for (int turns_left{ how_many }; turns_left > 0; --turns_left)
+	for (int turns_left{ how_many - 1 }; turns_left >= 0; --turns_left)
 	{
 		// Ask for the user's guess
 		int guess{ askGuess() };
 
 		// See if the user's guess is in the factored_squares
-		auto found{ std::find(squares.begin(), squares.end(), guess) };
-		if (found != squares.end())
+		if (findAndRemove(squares, guess))
 		{
 			// User's guess found!
-			if (turns_left - 1 > 0)
+			if (turns_left > 0)
 			{
-				std::cout << "Nice! " << (turns_left - 1) << " number(s) left.\n";
-				// Remove the correct guess from the squares list
-				squares.erase(found);
+				std::cout << "Nice! " << turns_left << " number(s) left.\n";
 			}
 			else
 			{
@@ -176,12 +194,13 @@ int main()
 		{
 			std::cout << guess << " is wrong!";
 
-			// Find the factored square closest to the user's guess
-			int closest_factored_square{ findClosestValue(squares, guess) };
-			if (std::abs(closest_factored_square - guess) <= 4)
+			// Find the closest numerical distance to guess, and
+			// determine if we should mention a hint
+			int closest{ findClosestValue(squares, guess) };
+			if (closest <= Config::distForHint)
 			{
-				std::cout << " Try " << closest_factored_square
-					  << " next time.\n";
+				// If the user was close, let them know what to try next time
+				std::cout << " Try " << closest << " next time.\n";
 			}
 			else
 			{
