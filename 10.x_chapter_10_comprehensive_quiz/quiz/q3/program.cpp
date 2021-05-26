@@ -31,8 +31,39 @@
  * binarySearch() should return the index of the target element if the target is
  * found, -1 otherwise
 */
+
+// Iterative solution for 3a
 int binarySearch(const int *array, int target, int min, int max)
 {
+	while(min <= max)
+	{
+		int center{ (min + max) / 2 };
+		// If we've found the target end early
+		if (array[center] == target)
+			return center;
+
+		// We haven't found the target, determine which half we should
+		// search in next
+		if (array[center] > target)
+		{
+			// The target is in the bottom half
+			// max is inclusive, so as to not consider parts of the
+			// array we've already considered, we take the index
+			// just below center
+			max = center - 1;
+		}
+		else
+		{
+			// The target is in the top half
+			// min is inclusive, so as to not consider parts of the
+			// array we've already considered, we take the index
+			// just above center
+			min = center + 1;
+		}
+	}
+
+	// If we're here, we haven't found the element
+	return -1;
 }
 
 int main()
@@ -55,7 +86,7 @@ int main()
 
 		// If it matches our expected value, then great!
 		if (index == expectedValues[count])
-			std::cout << "test value " << testValues[count] << "passed!\n";
+			std::cout << "test value " << testValues[count] << " passed!\n";
 		else // otherwise, our binarySearch() function must be broken
 			std::cout << "test value " << testValues[count] << " failed. There's something wrong with your code!\n";
 	}
