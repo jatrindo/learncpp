@@ -37,7 +37,8 @@ int binarySearch(const int *array, int target, int min, int max)
 {
 	while(min <= max)
 	{
-		int center{ (min + max) / 2 };
+		int center{ min + ((max - min) / 2) }; // this way of calculating midpoint avoids overflow
+
 		// If we've found the target end early
 		if (array[center] == target)
 			return center;
