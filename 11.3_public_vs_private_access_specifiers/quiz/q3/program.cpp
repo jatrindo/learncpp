@@ -23,18 +23,17 @@
  * ( 5 3 )
  * ( )
 */
+#include <array>
 #include <iostream>
 #include <cassert>
 
-namespace Config
-{
-	constexpr int max_stack_capacity{ 10 }; // fixed capacity
-}
-
 class Stack
 {
-	int m_arr[ Config::max_stack_capacity ]{};
-	int m_size{ 0 };
+	using container_t = std::array<int, 10>;
+	using container_size_t = container_t::size_type;
+
+	container_t m_arr{};
+	container_size_t m_size{ 0 };
 
 public:
 	void reset()
@@ -44,7 +43,7 @@ public:
 
 	bool push(int value)
 	{
-		if (m_size >= Config::max_stack_capacity)
+		if (m_size >= m_arr.size())
 			return false;
 
 		m_arr[m_size++] = value;
@@ -53,15 +52,15 @@ public:
 
 	int pop()
 	{
-		assert(m_size > 0 && "Stack has no more elements");
+		assert(m_size > 0 && "Stack has no more elements to pop");
 
-		return m_arr[m_size--];
+		return m_arr[--m_size];
 	}
 
 	void print()
 	{
 		std::cout << "( ";
-		for (int i{ 0 }; i < m_size; ++i)
+		for (container_size_t i{ 0 }; i < m_size; ++i)
 				std::cout << m_arr[i] << ' ';
 		std::cout << ")\n";
 	}
