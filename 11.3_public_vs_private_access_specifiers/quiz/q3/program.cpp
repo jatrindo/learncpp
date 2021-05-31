@@ -23,6 +23,50 @@
  * ( 5 3 )
  * ( )
 */
+#include <iostream>
+#include <cassert>
+
+namespace Config
+{
+	constexpr int max_stack_capacity{ 10 }; // fixed capacity
+}
+
+class Stack
+{
+	int m_arr[ Config::max_stack_capacity ]{};
+	int m_size{ 0 };
+
+public:
+	void reset()
+	{
+		m_size = 0;
+	}
+
+	bool push(int value)
+	{
+		if (m_size >= Config::max_stack_capacity)
+			return false;
+
+		m_arr[m_size++] = value;
+		return true;
+	}
+
+	int pop()
+	{
+		assert(m_size > 0 && "Stack has no more elements");
+
+		return m_arr[m_size--];
+	}
+
+	void print()
+	{
+		std::cout << "( ";
+		for (int i{ 0 }; i < m_size; ++i)
+				std::cout << m_arr[i] << ' ';
+		std::cout << ")\n";
+	}
+};
+
 int main()
 {
 	Stack stack;
