@@ -13,6 +13,39 @@
  * b) Update your answer to the previous question to use constructors with
  * default parameters. Use as few constructors as possible.
 */
+#include <iostream>
+
+class Ball
+{
+	std::string m_color{ "black" };
+	double m_radius{ 10.0 };
+
+public:
+	Ball() = default;
+
+	Ball(std::string color)
+	{
+		m_color = color;
+	}
+
+	Ball(double radius)
+	{
+		m_radius = radius;
+	}
+
+	Ball(std::string color, double radius)
+	{
+		m_color = color;
+		m_radius = radius;
+	}
+
+	void print()
+	{
+		std::cout << "color: " << m_color
+			  << ", radius: " << m_radius << '\n';
+	}
+};
+
 int main()
 {
 	Ball def{};
