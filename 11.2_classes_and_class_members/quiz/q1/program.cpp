@@ -9,6 +9,26 @@
  *
  * The following main function should execute:
 */
+#include <iostream>
+
+class IntPair
+{
+public:
+	int m_x{};
+	int m_y{};
+
+	void set(int x, int y)
+	{
+		m_x = x;
+		m_y = y;
+	}
+
+	void print()
+	{
+		std::cout << "(" << m_x << ", " << m_y << ")\n";
+	}
+};
+
 int main()
 {
 	IntPair p1;
