@@ -22,16 +22,17 @@ private:
 	double m_radius{};
 
 public:
+	/* Non-default parameter way
 	Ball()
 	{
 		m_color = "black";
-		m_radius = 10;
+		m_radius = 10.0;
 	}
 
 	Ball(const std::string& color)
 	{
 		m_color = color;
-		m_radius = 10;
+		m_radius = 10.0;
 	}
 
 	Ball(double radius)
@@ -43,6 +44,20 @@ public:
 	Ball(const std::string& color, double radius)
 	{
 		m_color = color;
+		m_radius = radius;
+	}
+	*/
+
+	/* Default parameter way */
+	Ball(const std::string& color="black", double radius=10.0)
+	{
+		m_color = color;
+		m_radius = radius;
+	}
+
+	Ball(double radius)
+	{
+		m_color = "black";
 		m_radius = radius;
 	}
 
