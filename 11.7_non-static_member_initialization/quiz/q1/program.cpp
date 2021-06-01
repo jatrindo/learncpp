@@ -19,15 +19,6 @@ private:
 	double m_radius{ 10.0 };
 
 public:
-	// Default constructor with no parameters
-	Ball() = default;
-
-	// Constructor with only color parameter (radius will use default value)
-	Ball(const std::string& color)
-		: m_color{ color }
-	{
-	}
-
 	// Constructor with only radius parameter (color will use default value)
 	Ball(double radius)
 		: m_radius{ radius }
@@ -35,7 +26,7 @@ public:
 	}
 
 	// Constructor with both color and radius parameters
-	Ball(const std::string& color, double radius)
+	Ball(const std::string& color="black", double radius=10.0)
 		: m_color{ color }, m_radius{ radius }
 	{
 	}
