@@ -30,27 +30,9 @@
 */
 #include <iostream>
 
-class Vector3d
-{
-private:
-	double m_x{};
-	double m_y{};
-	double m_z{};
-
-public:
-	Vector3d(double x = 0.0, double y = 0.0, double z = 0.0)
-		: m_x{x}, m_y{y}, m_z{z}
-	{
-	}
-
-	void print() const
-	{
-		std::cout << "Vector(" << m_x << " , " << m_y << " , " << m_z << ")\n";
-	}
-
-	// For 1a)
-	friend class Point3d;
-};
+// 1b) So that the Vector3d parameter of Point3d's 'moveByVector' forward
+// declaration is satisfied
+class Vector3d;
 
 class Point3d
 {
@@ -70,14 +52,41 @@ public:
 		std::cout << "Point(" << m_x << " , " << m_y << " , " << m_z << ")\n";
 	}
 
-	void moveByVector(const Vector3d& v)
-	{
-		// implement this function as a friend of class Vector3d
-		m_x += v.m_x;
-		m_y += v.m_y;
-		m_z += v.m_z;
-	}
+	// 1b) Turned into a forward declaration
+	void moveByVector(const Vector3d& v);
 };
+
+// 1b) Vector3d class definition moved below Point3d's so that this class knows
+// Point3d has a member function called 'moveByVector'
+class Vector3d
+{
+private:
+	double m_x{};
+	double m_y{};
+	double m_z{};
+
+public:
+	Vector3d(double x = 0.0, double y = 0.0, double z = 0.0)
+		: m_x{x}, m_y{y}, m_z{z}
+	{
+	}
+
+	void print() const
+	{
+		std::cout << "Vector(" << m_x << " , " << m_y << " , " << m_z << ")\n";
+	}
+
+	// For 1b)
+	friend void Point3d::moveByVector(const Vector3d& v);
+};
+
+// 1b) Definition to the forward declaration in Point3d class definition
+void Point3d::moveByVector(const Vector3d& v)
+{
+	m_x += v.m_x;
+	m_y += v.m_y;
+	m_z += v.m_z;
+}
 
 int main()
 {
