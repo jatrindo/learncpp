@@ -19,7 +19,7 @@ public:
 
 	~HelloWorld()
 	{
-		// replace this comment with your destructor implementation
+		delete[] m_data;
 	}
 
 	void print() const
