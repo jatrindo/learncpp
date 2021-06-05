@@ -194,13 +194,13 @@ public:
 		const int min_monster_hit_points{ 1 };
 		const int max_monster_hit_points{ 100 };
 
-		static const names_array_t s_names{ "Bob", "Charles", "Dale", "Fredrich", "Greta", "Helen" };
-		static const roars_array_t s_roars{ "*groan*", "hello!", "HELLO!", "boo...", "*sneezes*", "*laughs maniacally*" };
+		static constexpr names_array_t s_names{ "Bob", "Charles", "Dale", "Fredrich", "Greta", "Helen" };
+		static constexpr roars_array_t s_roars{ "*groan*", "hello!", "HELLO!", "boo...", "*sneezes*", "*laughs maniacally*" };
 
 		// Generate the random attributes
-		Monster::Type type{ static_cast<Monster::Type>(getRandomNumber(0, static_cast<int>(Monster::Type::max_monster_types) - 1)) };
-		std::string name{ s_names[ static_cast<std::size_t>(getRandomNumber(0, s_names.size() - 1)) ] };
-		std::string roar{ s_roars[ static_cast<std::size_t>(getRandomNumber(0, s_roars.size() - 1)) ] };
+		auto type{ static_cast<Monster::Type>(getRandomNumber(0, static_cast<int>(Monster::Type::max_monster_types) - 1)) };
+		auto name{ s_names[ static_cast<std::size_t>(getRandomNumber(0, s_names.size() - 1)) ] };
+		auto roar{ s_roars[ static_cast<std::size_t>(getRandomNumber(0, s_roars.size() - 1)) ] };
 		int hit_points{ getRandomNumber(min_monster_hit_points, max_monster_hit_points) };
 
 		// Create and return the monster
