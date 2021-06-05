@@ -93,6 +93,12 @@
 *
 *  return 0;
 * }
+*
+* e) Almost there!
+*
+* Now, just fix up the remaining program to use the classes you wrote above.
+* Since most of the functions have been moved into the classes, you can jettison
+* them.
 */
 #include <algorithm>
 #include <array>
@@ -103,6 +109,9 @@
 
 // Maximum score before losing.
 constexpr int maximumScore{21};
+
+// Minium score that the dealer has to have before standing.
+constexpr int minimumDealerScore{ 17 };
 
 enum class CardSuit
 {
@@ -315,130 +324,102 @@ public:
   }
 };
 
-// The following test program should compile:
+bool playerWantsHit()
+{
+  while (true)
+  {
+    std::cout << "(h) to hit, or (s) to stand: ";
+
+    char ch{};
+    std::cin >> ch;
+
+    switch (ch)
+    {
+    case 'h':
+      return true;
+    case 's':
+      return false;
+    }
+  }
+}
+
+// Returns true if the player went bust. False otherwise.
+bool playerTurn(Deck deck, Player& player)
+{
+  while (true)
+  {
+    std::cout << "You have: " << player.score() << '\n';
+
+    if (player.isBust())
+    {
+      return true;
+    }
+    else
+    {
+      if (playerWantsHit())
+      {
+        player.drawCard(deck);
+      }
+      else
+      {
+        // The player didn't go bust.
+        return false;
+      }
+    }
+  }
+}
+
+// Returns true if the dealer went bust. False otherwise.
+bool dealerTurn(Deck& deck, Player& dealer)
+{
+  while (dealer.score() < minimumDealerScore)
+  {
+    dealer.drawCard(deck);
+  }
+
+  return (dealer.isBust());
+}
+
+bool playBlackjack(Deck& deck)
+{
+
+  // Dealer draws one card
+  Player dealer{};
+  dealer.drawCard(deck);
+
+  std::cout << "The dealer is showing: " << dealer.score() << '\n';
+
+  // Player draws two cards
+  Player player{};
+  player.drawCard(deck);
+  player.drawCard(deck);
+
+  if (playerTurn(deck, player))
+  {
+    return false;
+  }
+
+  if (dealerTurn(deck, dealer))
+  {
+    return true;
+  }
+
+  return (player.score() > dealer.score());
+}
+
 int main()
 {
   Deck deck{};
-
   deck.shuffle();
-  deck.print();
 
-  Player player{};
-  Player dealer{};
-
-  player.drawCard(deck);
-  dealer.drawCard(deck);
-
-  std::cout << "The player drew a card with value: " << player.score() << '\n';
-  std::cout << "The dealer drew a card with value: " << dealer.score() << '\n';
+  if (playBlackjack(deck))
+  {
+    std::cout << "You win!\n";
+  }
+  else
+  {
+    std::cout << "You lose!\n";
+  }
 
   return 0;
 }
-// struct Player
-// {
-//   int score{};
-// };
-
-// // Maximum score before losing.
-// constexpr int maximumScore{ 21 };
-
-// // Minium score that the dealer has to have.
-// constexpr int minimumDealerScore{ 17 };
-
-// bool playerWantsHit()
-// {
-//   while (true)
-//   {
-//     std::cout << "(h) to hit, or (s) to stand: ";
-
-//     char ch{};
-//     std::cin >> ch;
-
-//     switch (ch)
-//     {
-//     case 'h':
-//       return true;
-//     case 's':
-//       return false;
-//     }
-//   }
-// }
-
-// // Returns true if the player went bust. False otherwise.
-// bool playerTurn(const deck_type& deck, index_type& nextCardIndex, Player& player)
-// {
-//   while (true)
-//   {
-//     std::cout << "You have: " << player.score << '\n';
-
-//     if (player.score > maximumScore)
-//     {
-//       return true;
-//     }
-//     else
-//     {
-//       if (playerWantsHit())
-//       {
-//         player.score += getCardValue(deck[nextCardIndex++]);
-//       }
-//       else
-//       {
-//         // The player didn't go bust.
-//         return false;
-//       }
-//     }
-//   }
-// }
-
-// // Returns true if the dealer went bust. False otherwise.
-// bool dealerTurn(const deck_type& deck, index_type& nextCardIndex, Player& dealer)
-// {
-//   while (dealer.score < minimumDealerScore)
-//   {
-//     dealer.score += getCardValue(deck[nextCardIndex++]);
-//   }
-
-//   return (dealer.score > maximumScore);
-// }
-
-// bool playBlackjack(const deck_type& deck)
-// {
-//   index_type nextCardIndex{ 0 };
-
-//   Player dealer{ getCardValue(deck[nextCardIndex++]) };
-
-//   std::cout << "The dealer is showing: " << dealer.score << '\n';
-
-//   Player player{ getCardValue(deck[nextCardIndex]) + getCardValue(deck[nextCardIndex + 1]) };
-//   nextCardIndex += 2;
-
-//   if (playerTurn(deck, nextCardIndex, player))
-//   {
-//     return false;
-//   }
-
-//   if (dealerTurn(deck, nextCardIndex, dealer))
-//   {
-//     return true;
-//   }
-
-//   return (player.score > dealer.score);
-// }
-
-// int main()
-// {
-//   auto deck{ createDeck() };
-
-//   shuffleDeck(deck);
-
-//   if (playBlackjack(deck))
-//   {
-//     std::cout << "You win!\n";
-//   }
-//   else
-//   {
-//     std::cout << "You lose!\n";
-//   }
-
-//   return 0;
-// }
