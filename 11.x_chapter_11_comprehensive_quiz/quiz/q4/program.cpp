@@ -31,9 +31,35 @@
 * do that.
 *
 * The following test program should compile:
+*
 * int main()
 * {
-*   Deck deck{}; deck.print(); deck.shuffle(); deck.print();
+*   Deck deck{}; deck.print(); deck.shuffle(); deck.print(); return 0;
+* }
+*
+*
+* c) Now we need a way to keep track of which card is next to be dealt (in the
+* original program, this is what nextCardIndex was for).
+*
+* First, add a member named m_cardIndex to Deck and initialize it to 0.
+*
+* Create a public member function named dealCard(), which should return a const
+* reference to the current card and advance m_cardIndex to the next index.
+* shuffle() should also be updated to reset m_cardIndex (since if you shuffle
+* the deck, you’ll start dealing from the top of the deck again).
+*
+* The following test program should compile:
+*
+* int main()
+* {
+*   Deck deck{};
+*
+*   deck.shuffle(); deck.print();
+*
+*   std::cout << "The first card has value: " << deck.dealCard().value() <<
+*   '\n'; std::cout << "The second card has value: " << deck.dealCard().value()
+*   << '\n';
+*
 *   return 0;
 * }
 */
@@ -185,19 +211,19 @@ public:
 
 private:
   deck_type m_deck{};
-  index_type m_cardIndex{ 0 };
+  index_type m_cardIndex{0};
 
 public:
   Deck()
   {
-    index_type card{ 0 };
+    index_type card{0};
 
     auto suits{static_cast<index_type>(CardSuit::MAX_SUITS)};
     auto ranks{static_cast<index_type>(CardRank::MAX_RANKS)};
 
-    for (index_type suit{ 0 }; suit < suits; ++suit)
+    for (index_type suit{0}; suit < suits; ++suit)
     {
-      for (index_type rank{ 0 }; rank < ranks; ++rank)
+      for (index_type rank{0}; rank < ranks; ++rank)
       {
         m_deck[card] = Card{static_cast<CardRank>(rank), static_cast<CardSuit>(suit)};
         ++card;
@@ -207,7 +233,7 @@ public:
 
   void print()
   {
-    for (const auto& card : m_deck)
+    for (const auto &card : m_deck)
     {
       card.print();
       std::cout << ' ';
@@ -218,9 +244,15 @@ public:
 
   void shuffle()
   {
-    static std::mt19937 mt{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
+    static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
 
     std::shuffle(m_deck.begin(), m_deck.end(), mt);
+    m_cardIndex = 0; // reset the index after shuffling
+  }
+
+  const Card &dealCard()
+  {
+    return m_deck[m_cardIndex++];
   }
 };
 
@@ -228,12 +260,16 @@ public:
 int main()
 {
   Deck deck{};
-  deck.print();
+
   deck.shuffle();
   deck.print();
+
+  std::cout << "The first card has value: " << deck.dealCard().value() << '\n';
+  std::cout << "The second card has value: " << deck.dealCard().value()
+            << '\n';
+
   return 0;
 }
-
 // struct Player
 // {
 //   int score{};
