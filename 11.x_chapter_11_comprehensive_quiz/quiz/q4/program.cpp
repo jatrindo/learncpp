@@ -17,6 +17,25 @@
  *
  * Finally, move the printCard() and getCardValue() functions inside the class
  * as public members (remember to make them const!).
+ *
+ *
+ * b) Okay, now let’s work on a Deck class. The deck needs to hold 52 cards, so
+ * use a private std::array member to create a fixed array of 52 cards named
+ * m_deck. Second, create a constructor that takes no parameters and initializes
+ * m_deck with one of each card (modify the code from the original createDeck()
+ * function). Third, move printDeck into the Deck class as a public member.
+ * Fourth, move shuffleDeck into the class as a public member.
+*
+* The trickiest part of this step is initializing the deck using the modified
+* code from the original createDeck() function. The following hint shows how to
+* do that.
+*
+* The following test program should compile:
+* int main()
+* {
+*   Deck deck{}; deck.print(); deck.shuffle(); deck.print();
+*   return 0;
+* }
 */
 #include <algorithm>
 #include <array>
@@ -158,13 +177,57 @@ public:
   }
 };
 
+class Deck
+{
+private:
+  using deck_type = std::array<Card, 52>;
+  using index_type = deck_type::size_type;
+  deck_type m_deck;
+
+public:
+  Deck()
+  {
+    index_type card{0};
+
+    auto suits{static_cast<index_type>(CardSuit::MAX_SUITS)};
+    auto ranks{static_cast<index_type>(CardRank::MAX_RANKS)};
+
+    for (index_type suit{0}; suit < suits; ++suit)
+    {
+      for (index_type rank{0}; rank < ranks; ++rank)
+      {
+        m_deck[card] = Card{static_cast<CardRank>(rank), static_cast<CardSuit>(suit)};
+        ++card;
+      }
+    }
+  }
+
+  void print()
+  {
+    for (const auto& card : m_deck)
+    {
+      card.print();
+      std::cout << ' ';
+    }
+
+    std::cout << '\n';
+  }
+
+  void shuffle()
+  {
+    static std::mt19937 mt{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
+
+    std::shuffle(m_deck.begin(), m_deck.end(), mt);
+  }
+};
+
 // The following test program should compile:
 int main()
 {
-  const Card cardQueenHearts{CardRank::RANK_QUEEN, CardSuit::SUIT_HEART};
-  cardQueenHearts.print();
-  std::cout << " has the value " << cardQueenHearts.value() << '\n';
-
+  Deck deck{};
+  deck.print();
+  deck.shuffle();
+  deck.print();
   return 0;
 }
 
@@ -173,54 +236,11 @@ int main()
 //   int score{};
 // };
 
-// using deck_type = std::array<Card, 52>;
-// using index_type = deck_type::size_type;
-
 // // Maximum score before losing.
 // constexpr int maximumScore{ 21 };
 
 // // Minium score that the dealer has to have.
 // constexpr int minimumDealerScore{ 17 };
-
-// void printDeck(const deck_type& deck)
-// {
-//   for (const auto& card : deck)
-//   {
-//     printCard(card);
-//     std::cout << ' ';
-//   }
-
-//   std::cout << '\n';
-// }
-
-// deck_type createDeck()
-// {
-//   deck_type deck{};
-
-//   index_type card{ 0 };
-
-//   auto suits{ static_cast<index_type>(CardSuit::MAX_SUITS) };
-//   auto ranks{ static_cast<index_type>(CardRank::MAX_RANKS) };
-
-//   for (index_type suit{ 0 }; suit < suits; ++suit)
-//   {
-//     for (index_type rank{ 0 }; rank < ranks; ++rank)
-//     {
-//       deck[card].suit = static_cast<CardSuit>(suit);
-//       deck[card].rank = static_cast<CardRank>(rank);
-//       ++card;
-//     }
-//   }
-
-//   return deck;
-// }
-
-// void shuffleDeck(deck_type& deck)
-// {
-//   static std::mt19937 mt{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
-
-//   std::shuffle(deck.begin(), deck.end(), mt);
-// }
 
 // bool playerWantsHit()
 // {
