@@ -111,11 +111,12 @@
  * 	return 0;
  * }
 */
-#include <string>
-#include <iostream>
-#include <ctime> // for time()
-#include <cstdlib> // for rand() and srand()
 #include <array>
+#include <cstdlib> // for rand() and srand()
+#include <ctime> // for time()
+#include <iostream>
+#include <string>
+#include <string_view>
 
 class Monster
 {
