@@ -61,7 +61,9 @@ private:
   CardSuit m_suit{};
 
 public:
-  Card(CardRank rank = CardRank::MAX_RANKS, CardSuit suit = CardSuit::MAX_SUITS)
+  Card() = default;
+
+  Card(CardRank rank, CardSuit suit)
       : m_rank{rank}, m_suit{suit}
   {
   }
