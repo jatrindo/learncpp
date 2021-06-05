@@ -110,6 +110,7 @@
  * 	return 0;
  * }
 */
+#include <string>
 
 // a)
 enum class MonsterType
@@ -124,4 +125,13 @@ enum class MonsterType
 	Zombie,
 
 	max_monster_types
+};
+
+class Monster
+{
+private:
+	MonsterType type{};
+	std::string name{};
+	std::string roar{};
+	int hit_points{};
 };
