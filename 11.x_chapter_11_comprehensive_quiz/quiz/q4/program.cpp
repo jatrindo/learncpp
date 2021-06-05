@@ -62,6 +62,37 @@
 *
 *   return 0;
 * }
+*
+*
+* d) Next up is the Player.
+*
+* Because playerTurn and dealerTurn are very different from each other, we’ll
+* keep them as non-member functions.
+*
+* Make Player a class and add a drawCard member function that deals the player
+* one card from the deck, increasing the player’s score.
+*
+* We’ll also need a member function to access the Player‘s score. For
+* convenience, add a member function named isBust() that returns true if the
+* player’s score exceeds the maximum (maximumScore).
+*
+* The following code should compile:
+*
+* int main()
+* {
+*  Deck deck{};
+*
+*  deck.shuffle(); deck.print();
+*
+*  Player player{}; Player dealer{};
+*
+*  player.drawCard(deck); dealer.drawCard(deck);
+*
+*  std::cout << "The player drew a card with value: " << player.score() << '\n';
+*  std::cout << "The dealer drew a card with value: " << dealer.score() << '\n';
+*
+*  return 0;
+* }
 */
 #include <algorithm>
 #include <array>
@@ -258,6 +289,31 @@ public:
   }
 };
 
+class Player
+{
+private:
+  int m_score{};
+
+public:
+  // Draw a card and increase the player's score
+  void drawCard(Deck &deck)
+  {
+    m_score += deck.dealCard().value();
+  }
+
+  int score()
+  {
+    return m_score;
+  }
+
+  bool isBust()
+  {
+    // Maximum score before losing.
+    const static int maximumScore{ 21 };
+    return m_score > maximumScore;
+  }
+};
+
 // The following test program should compile:
 int main()
 {
@@ -266,9 +322,14 @@ int main()
   deck.shuffle();
   deck.print();
 
-  std::cout << "The first card has value: " << deck.dealCard().value() << '\n';
-  std::cout << "The second card has value: " << deck.dealCard().value()
-            << '\n';
+  Player player{};
+  Player dealer{};
+
+  player.drawCard(deck);
+  dealer.drawCard(deck);
+
+  std::cout << "The player drew a card with value: " << player.score() << '\n';
+  std::cout << "The dealer drew a card with value: " << dealer.score() << '\n';
 
   return 0;
 }
