@@ -44,16 +44,17 @@
 
 class Point2d
 {
+private:
 	double m_x{};
 	double m_y{};
 
 public:
-	Point2d(double x = 0, double y = 0)
+	Point2d(double x = 0.0, double y = 0.0)
 		: m_x{ x }, m_y{ y }
 	{
 	}
 
-	void print()
+	void print() const
 	{
 		std::cout << "Point2d(" << m_x << ", " << m_y << ")\n";
 	}
