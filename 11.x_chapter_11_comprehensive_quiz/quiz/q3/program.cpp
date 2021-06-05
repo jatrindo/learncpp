@@ -79,7 +79,7 @@
  * int getRandomNumber(int min, int max)
  * {
  * 	static constexpr double fraction{ 1.0 /
- * 		(static_cast<double>(RAND_MAX) + 1.0 }; // static used for efficiency, so we only calculate this value once
+ * 		(static_cast<double>(RAND_MAX)) + 1.0 }; // static used for efficiency, so we only calculate this value once
  * 	// evenly distribute the random number across our range
  * 	return static_cast<int>(std::rand() * fraction * (max - min + 1) + min);
  * }
@@ -178,6 +178,15 @@ public:
 		return Monster(Monster::Type::skeleton, "Bones", "*rattle*", 4);
 	};
 
+	// Generate a random number between min and max (inclusive)
+	// Assumes srand() has already been called
+	static int getRandomNumber(int min, int max)
+	{
+		static constexpr double fraction{ 1.0 /
+			(static_cast<double>(RAND_MAX) + 1.0) }; // static used for efficiency, so we only calculate this value once
+		// evenly distribute the random number across our range
+		return static_cast<int>(std::rand() * fraction * (max - min + 1) + min);
+	};
 };
 
 int main()
