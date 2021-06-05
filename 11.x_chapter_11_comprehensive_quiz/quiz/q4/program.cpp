@@ -179,22 +179,25 @@ public:
 
 class Deck
 {
-private:
+public:
   using deck_type = std::array<Card, 52>;
   using index_type = deck_type::size_type;
-  deck_type m_deck;
+
+private:
+  deck_type m_deck{};
+  index_type m_cardIndex{ 0 };
 
 public:
   Deck()
   {
-    index_type card{0};
+    index_type card{ 0 };
 
     auto suits{static_cast<index_type>(CardSuit::MAX_SUITS)};
     auto ranks{static_cast<index_type>(CardRank::MAX_RANKS)};
 
-    for (index_type suit{0}; suit < suits; ++suit)
+    for (index_type suit{ 0 }; suit < suits; ++suit)
     {
-      for (index_type rank{0}; rank < ranks; ++rank)
+      for (index_type rank{ 0 }; rank < ranks; ++rank)
       {
         m_deck[card] = Card{static_cast<CardRank>(rank), static_cast<CardSuit>(suit)};
         ++card;
