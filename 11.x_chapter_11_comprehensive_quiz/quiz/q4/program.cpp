@@ -247,11 +247,13 @@ public:
     static std::mt19937 mt{static_cast<std::mt19937::result_type>(std::time(nullptr))};
 
     std::shuffle(m_deck.begin(), m_deck.end(), mt);
+
     m_cardIndex = 0; // reset the index after shuffling
   }
 
   const Card &dealCard()
   {
+    assert(m_cardIndex < m_deck.size());
     return m_deck[m_cardIndex++];
   }
 };
