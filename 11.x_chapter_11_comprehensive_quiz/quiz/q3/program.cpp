@@ -41,6 +41,7 @@
  * 	int main()
  * 	{
  * 		Monster skeleton{ Monster::Type::skeleton, "Bones", "*rattle*", 4 };
+ * 		skeleton.print();
  *
  * 		return 0;
  * 	}
@@ -111,6 +112,7 @@
  * }
 */
 #include <string>
+#include <iostream>
 
 class Monster
 {
@@ -141,11 +143,34 @@ public:
 	{
 	}
 
+	std::string getTypeString(Type type) const
+	{
+		switch (type)
+		{
+			case Type::dragon:	return "dragon";
+			case Type::goblin:	return "goblin";
+			case Type::ogre:	return "ogre";
+			case Type::orc:		return "orc";
+			case Type::skeleton:	return "skeleton";
+			case Type::troll:	return "troll";
+			case Type::vampire:	return "vampire";
+			case Type::zombie:	return "zombie";
+			default:		return "???";
+		}
+	}
+
+	void print() const
+	{
+		std::cout << m_name << " the " << getTypeString(m_type)
+			  << " has " << m_hit_points << " hit points and says "
+			  << m_roar << '\n';
+	}
 };
 
 int main()
 {
 	Monster skeleton{ Monster::Type::skeleton, "Bones", "*rattle*", 4 };
+	skeleton.print();
 
 	return 0;
 }
