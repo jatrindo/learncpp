@@ -6,14 +6,17 @@
  * Troll, Vampire, and Zombie. Add an additional max_monster_types enum so we
  * can count how many enumerators there are.
  *
+ *
  * b) Now, let's create our Monster class. Our Monster will have 4 attributes
  * (member variables): a type (MonsterType), a name (std::string), a roar
  * (std::string), and the number of hit points (int). Create a Monster class
  * that has these 4 member variables.
  *
+ *
  * c) enum MonsterType is specific to Monster, so move the enum inside the class
  * as a public declaration. When the enum is inside the class, the "Monster" in
  * "MonsterType" is redundant, so it can be removed.
+ *
  *
  * d) Create a constructor that allows you to initialize all of the member
  * variables.
@@ -26,6 +29,7 @@
  * 		
  * 		return 0;
  * 	}
+ *
  *
  * e) Now we want to be able to print our monster so we can validate it's
  * correct. To do that, we're going to need to write a function that converts a
@@ -40,6 +44,7 @@
  *
  * 		return 0;
  * 	}
+ *
  *
  * f) Now we can create a random monster generator. Let's consider how our
  * MonsterGenerator class will work. Ideally, we'll ask it to give us a Monster,
@@ -105,3 +110,18 @@
  * 	return 0;
  * }
 */
+
+// a)
+enum class MonsterType
+{
+	Dragon,
+	Goblin,
+	Ogre,
+	Orc,
+	Skeleton,
+	Troll,
+	Vampire,
+	Zombie,
+
+	max_monster_types
+};
