@@ -101,6 +101,9 @@
 #include <iostream>
 #include <random>
 
+// Maximum score before losing.
+constexpr int maximumScore{21};
+
 enum class CardSuit
 {
   SUIT_CLUB,
@@ -308,8 +311,6 @@ public:
 
   bool isBust()
   {
-    // Maximum score before losing.
-    const static int maximumScore{ 21 };
     return m_score > maximumScore;
   }
 };
