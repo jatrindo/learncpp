@@ -170,10 +170,20 @@ public:
 	}
 };
 
+class MonsterGenerator
+{
+public:
+	static Monster generateMonster()
+	{
+		return Monster(Monster::Type::skeleton, "Bones", "*rattle*", 4);
+	};
+
+};
+
 int main()
 {
-	Monster skeleton{ Monster::Type::skeleton, "Bones", "*rattle*", 4 };
-	skeleton.print();
+	Monster m{ MonsterGenerator::generateMonster() };
+	m.print();
 
 	return 0;
 }
