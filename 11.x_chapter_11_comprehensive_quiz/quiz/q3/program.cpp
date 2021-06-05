@@ -117,21 +117,35 @@ class Monster
 public:
 	enum class Type
 	{
-		Dragon,
-		Goblin,
-		Ogre,
-		Orc,
-		Skeleton,
-		Troll,
-		Vampire,
-		Zombie,
+		dragon,
+		goblin,
+		ogre,
+		orc,
+		skeleton,
+		troll,
+		vampire,
+		zombie,
 
 		max_monster_types
 	};
 
 private:
-	Type type{};
-	std::string name{};
-	std::string roar{};
-	int hit_points{};
+	Type m_type{};
+	std::string m_name{};
+	std::string m_roar{};
+	int m_hit_points{};
+
+public:
+	Monster(Type type, const std::string& name, const std::string& roar, int hit_points)
+		: m_type{ type }, m_name{ name }, m_roar{ roar }, m_hit_points{ hit_points }
+	{
+	}
+
 };
+
+int main()
+{
+	Monster skeleton{ Monster::Type::skeleton, "Bones", "*rattle*", 4 };
+
+	return 0;
+}
