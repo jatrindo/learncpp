@@ -42,6 +42,23 @@
 // Listing A
 #include <iostream>
 
+class Point2d
+{
+	double m_x{};
+	double m_y{};
+
+public:
+	Point2d(double x = 0, double y = 0)
+		: m_x{ x }, m_y{ y }
+	{
+	}
+
+	void print()
+	{
+		std::cout << "Point2d(" << m_x << ", " << m_y << ")\n";
+	}
+};
+
 int main()
 {
 	Point2d first{};
