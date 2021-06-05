@@ -143,9 +143,12 @@ public:
 	{
 	}
 
-	std::string getTypeString(Type type) const
+	// Since we're returning string known at compile-time, we could return
+	// a std::string_view instead of std::string to avoid the additional
+	// run-time cost
+	std::string_view getTypeString() const
 	{
-		switch (type)
+		switch (m_type)
 		{
 			case Type::dragon:	return "dragon";
 			case Type::goblin:	return "goblin";
@@ -161,7 +164,7 @@ public:
 
 	void print() const
 	{
-		std::cout << m_name << " the " << getTypeString(m_type)
+		std::cout << m_name << " the " << getTypeString()
 			  << " has " << m_hit_points << " hit points and says "
 			  << m_roar << '\n';
 	}
