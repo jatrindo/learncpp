@@ -103,7 +103,7 @@
  * int main()
  * {
  * 	std::srand(static_cast<unsigned int>(std::time(nullptr))); // set initial seed value to system clock
- * 	std::srand(); // If using Visual Studio, discard first random value
+ * 	std::rand(); // If using Visual Studio, discard first random value
  * 
  * 	Monster m{ MonsterGenerator::generateMonster() };
  * 	m.print();
@@ -113,6 +113,9 @@
 */
 #include <string>
 #include <iostream>
+#include <ctime> // for time()
+#include <cstdlib> // for rand() and srand()
+#include <array>
 
 class Monster
 {
@@ -173,11 +176,6 @@ public:
 class MonsterGenerator
 {
 public:
-	static Monster generateMonster()
-	{
-		return Monster(Monster::Type::skeleton, "Bones", "*rattle*", 4);
-	};
-
 	// Generate a random number between min and max (inclusive)
 	// Assumes srand() has already been called
 	static int getRandomNumber(int min, int max)
@@ -187,10 +185,35 @@ public:
 		// evenly distribute the random number across our range
 		return static_cast<int>(std::rand() * fraction * (max - min + 1) + min);
 	};
+
+	static Monster generateMonster()
+	{
+		// For convenience
+		using names_array_t = std::array<const char*, 6>;
+		using roars_array_t = std::array<const char*, 6>;
+		const int min_monster_hit_points{ 1 };
+		const int max_monster_hit_points{ 100 };
+
+		static const names_array_t s_names{ "Bob", "Charles", "Dale", "Fredrich", "Greta", "Helen" };
+		static const roars_array_t s_roars{ "*groan*", "hello!", "HELLO!", "boo...", "*sneezes*", "*laughs maniacally*" };
+
+		// Generate the random attributes
+		Monster::Type type{ static_cast<Monster::Type>(getRandomNumber(0, static_cast<int>(Monster::Type::max_monster_types) - 1)) };
+		std::string name{ s_names[ static_cast<std::size_t>(getRandomNumber(0, s_names.size() - 1)) ] };
+		std::string roar{ s_roars[ static_cast<std::size_t>(getRandomNumber(0, s_roars.size() - 1)) ] };
+		int hit_points{ getRandomNumber(min_monster_hit_points, max_monster_hit_points) };
+
+		// Create and return the monster
+		return Monster(type, name, roar, hit_points);
+	};
+
 };
 
 int main()
 {
+	std::srand(static_cast<unsigned int>(std::time(nullptr))); // set initial seed value to system clock
+	std::rand(); // If using Visual Studio, discard first random value
+
 	Monster m{ MonsterGenerator::generateMonster() };
 	m.print();
 
