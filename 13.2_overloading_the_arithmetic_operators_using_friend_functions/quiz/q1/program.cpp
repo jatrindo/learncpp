@@ -55,19 +55,37 @@
  * 0/6
  *
 */
+#include <iostream>
+
+class Fraction
+{
+private:
+    int m_num{};
+    int m_den{};
+
+public:
+    Fraction(int num, int den)
+        : m_num{ num }, m_den{ den }
+    {
+    }
+
+    void print()
+    {
+        std::cout << m_num << '/' << m_den << '\n';
+    }
+};
 
 // Listing A
-// #include <iostream>
-// int main()
-// {
-//     Fraction f1{ 1, 4 };
-//     f1.print();
+int main()
+{
+    Fraction f1{ 1, 4 };
+    f1.print();
  
-//     Fraction f2{ 1, 2 };
-//     f2.print();
+    Fraction f2{ 1, 2 };
+    f2.print();
  
-//     return 0;
-// }
+    return 0;
+}
 
 // Listing B
 // #include <iostream>
