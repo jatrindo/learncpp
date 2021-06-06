@@ -67,6 +67,7 @@ public:
     Fraction(int num = 0, int den = 1)
         : m_num{num}, m_den{den}
     {
+        reduce();
     }
 
     void print()
@@ -79,14 +80,12 @@ public:
         return (b == 0) ? (a > 0 ? a : -a) : gcd(b, a % b);
     }
 
-    Fraction reduce()
+    void reduce()
     {
         int frac_gcd{ gcd(m_num, m_den) };
 
         m_num /= frac_gcd;
         m_den /= frac_gcd;
-
-        return *this;
     }
 
     friend Fraction operator*(const Fraction &frac, int i);
@@ -96,7 +95,7 @@ public:
 
 Fraction operator*(const Fraction &frac, int i)
 {
-    return Fraction{frac.m_num * i, frac.m_den}.reduce();
+    return Fraction{frac.m_num * i, frac.m_den};
 }
 
 Fraction operator*(int i, const Fraction &frac)
@@ -106,7 +105,7 @@ Fraction operator*(int i, const Fraction &frac)
 
 Fraction operator*(const Fraction &frac1, const Fraction &frac2)
 {
-    return Fraction{frac1.m_num * frac2.m_num, frac1.m_den * frac2.m_den}.reduce();
+    return Fraction{frac1.m_num * frac2.m_num, frac1.m_den * frac2.m_den};
 }
 
 // Listing A
