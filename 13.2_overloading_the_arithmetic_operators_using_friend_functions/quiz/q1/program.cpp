@@ -36,7 +36,7 @@
  * The following is a function to find the GCD:
  *
  *  int gcd(int a, int b) {
- *      return (b == 0) ? (a > 0 ? a : -a) : gcd(b, a % b)
+ *      return (b == 0) ? (a > 0 ? a : -a) : gcd(b, a % b);
  *  }
  *
  * Add this function to your class, and write a member function named reduce()
@@ -60,12 +60,12 @@
 class Fraction
 {
 private:
-    int m_num{ 0 };
-    int m_den{ 1 };
+    int m_num{0};
+    int m_den{1};
 
 public:
     Fraction(int num = 0, int den = 1)
-        : m_num{ num }, m_den{ den }
+        : m_num{num}, m_den{den}
     {
     }
 
@@ -74,24 +74,39 @@ public:
         std::cout << m_num << '/' << m_den << '\n';
     }
 
-    friend Fraction operator*(const Fraction& frac, int i);
-    friend Fraction operator*(int i, const Fraction& frac);
-    friend Fraction operator*(const Fraction& frac1, const Fraction& frac2);
+    int gcd(int a, int b)
+    {
+        return (b == 0) ? (a > 0 ? a : -a) : gcd(b, a % b);
+    }
+
+    Fraction reduce()
+    {
+        int frac_gcd{ gcd(m_num, m_den) };
+
+        m_num /= frac_gcd;
+        m_den /= frac_gcd;
+
+        return *this;
+    }
+
+    friend Fraction operator*(const Fraction &frac, int i);
+    friend Fraction operator*(int i, const Fraction &frac);
+    friend Fraction operator*(const Fraction &frac1, const Fraction &frac2);
 };
 
 Fraction operator*(const Fraction &frac, int i)
 {
-    return Fraction{ frac.m_num * i, frac.m_den };
+    return Fraction{frac.m_num * i, frac.m_den}.reduce();
 }
 
 Fraction operator*(int i, const Fraction &frac)
 {
-    return { frac * i };
+    return {frac * i};
 }
 
 Fraction operator*(const Fraction &frac1, const Fraction &frac2)
 {
-    return Fraction{ frac1.m_num * frac2.m_num, frac1.m_den * frac2.m_den };
+    return Fraction{frac1.m_num * frac2.m_num, frac1.m_den * frac2.m_den}.reduce();
 }
 
 // Listing A
@@ -107,34 +122,6 @@ Fraction operator*(const Fraction &frac1, const Fraction &frac2)
 //}
 
 // Listing B
-#include <iostream>
- 
-int main()
-{
-    Fraction f1{2, 5};
-    f1.print();
- 
-    Fraction f2{3, 8};
-    f2.print();
- 
-    Fraction f3{ f1 * f2 };
-    f3.print();
- 
-    Fraction f4{ f1 * 2 };
-    f4.print();
- 
-    Fraction f5{ 2 * f2 };
-    f5.print();
- 
-    Fraction f6{ Fraction{1, 2} * Fraction{2, 3} * Fraction{3, 4} };
-    f6.print();
- 
-    return 0;
-}
-
-// Listing E
-// #include <iostream>
-
 // int main()
 // {
 //     Fraction f1{2, 5};
@@ -143,20 +130,44 @@ int main()
 //     Fraction f2{3, 8};
 //     f2.print();
 
-//     Fraction f3{f1 * f2};
+//     Fraction f3{ f1 * f2 };
 //     f3.print();
 
-//     Fraction f4{f1 * 2};
+//     Fraction f4{ f1 * 2 };
 //     f4.print();
 
-//     Fraction f5{2 * f2};
+//     Fraction f5{ 2 * f2 };
 //     f5.print();
 
-//     Fraction f6{Fraction{1, 2} * Fraction{2, 3} * Fraction{3, 4}};
+//     Fraction f6{ Fraction{1, 2} * Fraction{2, 3} * Fraction{3, 4} };
 //     f6.print();
-
-//     Fraction f7{0, 6};
-//     f7.print();
 
 //     return 0;
 // }
+
+// Listing E
+int main()
+{
+    Fraction f1{2, 5};
+    f1.print();
+
+    Fraction f2{3, 8};
+    f2.print();
+
+    Fraction f3{f1 * f2};
+    f3.print();
+
+    Fraction f4{f1 * 2};
+    f4.print();
+
+    Fraction f5{2 * f2};
+    f5.print();
+
+    Fraction f6{Fraction{1, 2} * Fraction{2, 3} * Fraction{3, 4}};
+    f6.print();
+
+    Fraction f7{0, 6};
+    f7.print();
+
+    return 0;
+}
