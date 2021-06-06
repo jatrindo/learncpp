@@ -60,11 +60,11 @@
 class Fraction
 {
 private:
-    int m_num{};
-    int m_den{};
+    int m_num{ 0 };
+    int m_den{ 1 };
 
 public:
-    Fraction(int num, int den)
+    Fraction(int num = 0, int den = 1)
         : m_num{ num }, m_den{ den }
     {
     }
