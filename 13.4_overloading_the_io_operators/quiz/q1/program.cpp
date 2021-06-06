@@ -1,6 +1,6 @@
 /*
  *
- * Take the Fraction class we wrote in the prvious quiz ([Listing A]) and add an
+ * Take the Fraction class we wrote in the previous quiz ([Listing A]) and add an
  * overloaded operator<< and operator>> to it.
  *
  * The following program should compile: [Listing M]
@@ -14,6 +14,7 @@
 
 // Listing A
 #include <iostream>
+#include <limits> // for std::numeric_limits
  
 class Fraction
 {
@@ -49,6 +50,8 @@ public:
 	friend Fraction operator*(const Fraction &f1, const Fraction &f2);
 	friend Fraction operator*(const Fraction &f1, int value);
 	friend Fraction operator*(int value, const Fraction &f1);
+    friend std::ostream& operator<<(std::ostream& out, const Fraction& frac);
+    friend std::istream& operator>>(std::istream& in, Fraction& frac);
  
 	void print() const
 	{
@@ -69,6 +72,26 @@ Fraction operator*(const Fraction &f1, int value)
 Fraction operator*(int value, const Fraction &f1)
 {
 	return Fraction(f1.m_numerator * value, f1.m_denominator);
+}
+
+std::ostream& operator<<(std::ostream &out, const Fraction &frac)
+{
+	out << frac.m_numerator << '/' << frac.m_denominator;
+
+    return out;
+}
+
+std::istream& operator>>(std::istream &in, Fraction &frac)
+{
+    // Expects fractions to be in the form n/m, where n and m are integers
+    in >> frac.m_numerator;
+
+    // note: had to peek for this line
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '/');
+
+    in >> frac.m_denominator;
+
+    return in;
 }
 
 // Listing M
