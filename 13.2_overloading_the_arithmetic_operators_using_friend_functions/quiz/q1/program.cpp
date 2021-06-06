@@ -75,17 +75,17 @@ public:
         std::cout << m_num << '/' << m_den << '\n';
     }
 
-    int gcd(int a, int b)
+    static int gcd(int a, int b)
     {
         return (b == 0) ? (a > 0 ? a : -a) : gcd(b, a % b);
     }
 
     void reduce()
     {
-        int frac_gcd{ gcd(m_num, m_den) };
+        int gcd{ Fraction::gcd(m_num, m_den) };
 
-        m_num /= frac_gcd;
-        m_den /= frac_gcd;
+        m_num /= gcd;
+        m_den /= gcd;
     }
 
     friend Fraction operator*(const Fraction &frac, int i);
