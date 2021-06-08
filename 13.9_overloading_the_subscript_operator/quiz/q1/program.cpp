@@ -34,6 +34,14 @@
  * The following program should run: [Listing M]
  * 
 */
+#include <string>
+
+// Part a)
+struct StudentGrade
+{
+    std::string name{};
+    char grade{};
+};
 
 // Listing M (for part c)
 //int main()
