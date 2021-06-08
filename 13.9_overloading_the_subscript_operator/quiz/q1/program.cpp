@@ -60,7 +60,7 @@ char& GradeMap::operator[](const std::string& name)
 {
     // Check if student with name exists
     const auto found{std::find_if(m_map.begin(), m_map.end(),
-                                  [name](const StudentGrade &student)
+                                  [&](const StudentGrade &student)
                                   {
                                       return (student.name == name);
                                   })};
