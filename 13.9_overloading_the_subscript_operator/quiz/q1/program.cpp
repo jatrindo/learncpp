@@ -36,6 +36,8 @@
 */
 #include <string>
 #include <vector>
+#include <algorithm> // for std::find_if
+#include <iostream>
 
 // Part a)
 struct StudentGrade
@@ -49,18 +51,44 @@ class GradeMap
 {
 private:
     std::vector<StudentGrade> m_map{};
+
+public:
+    char& operator[](const std::string& name);
 };
 
+char& GradeMap::operator[](const std::string& name)
+{
+    // Check if student with name exists
+    const auto found{std::find_if(m_map.begin(), m_map.end(),
+                                  [name](const StudentGrade &student)
+                                  {
+                                      return (student.name == name);
+                                  })};
+
+    if (found == m_map.end())
+    {
+        // Does not exist, add the the student to map
+        m_map.push_back(StudentGrade{ name, 'X' });
+        // Return a reference to the newly added student's grade
+        return m_map.back().grade;
+    }
+    else
+    {
+        // Exists, return a reference to the student's grade
+        return found->grade;
+    }
+}
+
 // Listing M (for part c)
-//int main()
-//{
-//    GradeMap grades{};
-//
-//    grades["Joe"] = 'A';
-//    grades["Frank"] = 'B';
-//
-//    std::cout << "Joe has a grade of " << grades["Joe"] << '\n';
-//    std::cout << "Frank has a grade of " << grades["Frank"] << '\n';
-//
-//    return 0;
-//}
+int main()
+{
+    GradeMap grades{};
+
+    grades["Joe"] = 'A';
+    grades["Frank"] = 'B';
+
+    std::cout << "Joe has a grade of " << grades["Joe"] << '\n';
+    std::cout << "Frank has a grade of " << grades["Frank"] << '\n';
+
+    return 0;
+}
