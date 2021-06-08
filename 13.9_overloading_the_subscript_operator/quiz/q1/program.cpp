@@ -35,12 +35,20 @@
  * 
 */
 #include <string>
+#include <vector>
 
 // Part a)
 struct StudentGrade
 {
     std::string name{};
     char grade{};
+};
+
+// Part b)
+class GradeMap
+{
+private:
+    std::vector<StudentGrade> m_map{};
 };
 
 // Listing M (for part c)
