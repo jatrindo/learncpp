@@ -4,12 +4,48 @@
  * substring should be defined by the second parameter.
  *
  * The following code should run: [Listing M]
- * 
+ *
  * This should print
- * 
+ *
  *     world
  *
+ * Hint: You can use array indicies to access individual chars within the
+ * std::string
+ * Hint: You can use operator+= to append something to a string
+ *
 */
+#include <iostream>
+#include <string>
+#include <cassert>
+
+class MyString
+{
+private:
+    std::string m_string{};
+
+public:
+    MyString(const std::string& string)
+        : m_string{ string }
+        {
+        }
+
+    std::string operator()(int start, int length);
+};
+
+std::string MyString::operator()(int start, int length)
+{
+    assert(start >= 0 && (start + length < static_cast<int>(m_string.size())) && "Attempted access of OOB index in MyString");
+
+    std::string substr;
+    for (int i{ 0 }; i < length; ++i)
+    {
+        substr += m_string[static_cast<std::size_t>(start + i)];
+    }
+
+    return substr;
+}
+
+// Listing M
 int main()
 {
     MyString string{ "Hello, world!" };
