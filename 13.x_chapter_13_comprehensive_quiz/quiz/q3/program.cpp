@@ -28,31 +28,24 @@ private:
 
 public:
     explicit IntArray(int length)
+        : m_length{ length }
     {
-        assert(length >= 0 && "IntArray() - Non-positive intial length given");
+        assert(length > 0 && "IntArray() - Non-positive intial length given");
 
-        m_length = length;
-        m_array = new int[length];
+        m_array = new int[m_length]{};
     }
 
     IntArray(const IntArray& intarr)
+        : m_length{ intarr.m_length }
     {
-        // Self-assignment guard
-        if (&intarr == this)
-            return;
-
         assert(intarr.m_length >= 0 && "IntArray(const IntArray&) -"
             " IntArray attempted to be constructed with IntArray of non-positive length");
 
-        // Delete the previous array we have to prevent memory leakage
-        delete[] m_array;
-
-        // Update length and pointer
-        m_length = intarr.m_length;
-        m_array = new int[intarr.m_length];
+        // Initialize member length and pointer
+        m_array = new int[m_length];
 
         // Copy the parameter's array into the new array
-        for (int i{ 0 }; i < intarr.m_length; ++i)
+        for (int i{ 0 }; i < m_length; ++i)
         {
             m_array[i] = intarr.m_array[i];
         }
@@ -63,7 +56,7 @@ public:
         delete[] m_array;
     }
 
-    int& operator[](int i)
+    int& operator[](const int i)
     {
         assert( i >= 0 && i < m_length && "IntArray::operator[] - Invalid index given");
         return m_array[i];
@@ -83,10 +76,10 @@ public:
 
         // Update length and pointer
         m_length = intarr.m_length;
-        m_array = new int[intarr.m_length];
+        m_array = new int[m_length];
 
         // Copy the parameter's array into the new array
-        for (int i{ 0 }; i < intarr.m_length; ++i)
+        for (int i{ 0 }; i < m_length; ++i)
         {
             m_array[i] = intarr.m_array[i];
         }
