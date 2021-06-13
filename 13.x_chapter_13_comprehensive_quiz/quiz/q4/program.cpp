@@ -108,28 +108,75 @@
 // Have a 16-bit signed integer hold the non-fraactional part of the
 // number, and a 8-bit signed integer to hold the fractional component
 
+#include <iostream>
+#include <cstdint>
+
+class FixedPoint2
+{
+private:
+    std::int_least16_t m_non_frac_part{ 0 };
+    std::int_least8_t m_frac_part{ 0 };
+
+public:
+    FixedPoint2(std::int_least16_t non_frac_part=0, std::int_least8_t frac_part=0)
+        : m_non_frac_part{ non_frac_part }, m_frac_part{ frac_part }
+    {
+    }
+
+    operator double() const
+    {
+        return m_non_frac_part + (static_cast<double>(m_frac_part) / 100);
+    }
+
+    // Whoops, extra
+    //FixedPoint2(double d)
+    //    : m_non_frac_part{ static_cast<std::int_least16_t>(d) }, m_frac_part{ static_cast<std::int_least8_t>((d - static_cast<int>(d) * 100)) }
+    //{
+    //}
+
+    friend std::ostream& operator<<(std::ostream& out, const FixedPoint2& fp)
+    {
+        // Output a negative sign if either of the parts are negative
+        if (fp.m_non_frac_part < 0 || fp.m_frac_part < 0)
+            out << '-';
+
+        // Output non-frac component and decimal
+        out << std::abs(static_cast<double>(fp.m_non_frac_part)) << '.';
+
+        // Output frac component
+
+        // If we're in the single digits, output a leading zero
+        if (std::abs(fp.m_frac_part) < 10)
+            out << '0';
+
+        out << std::abs(static_cast<double>(fp.m_frac_part));
+
+        return out;
+    }
+};
+
 // Listing B
-//int main()
-//{
-//    FixedPoint2 a{ 34, 56 };
-//    std::cout << a << '\n';
-//
-//    FixedPoint2 b{ -2, 8 };
-//    std::cout << b << '\n';
-//
-//    FixedPoint2 c{ 2, -8 };
-//    std::cout << c << '\n';
-//
-//    FixedPoint2 d{ -2, -8 };
-//    std::cout << d << '\n';
-//
-//    FixedPoint2 e{ 0, -5 };
-//    std::cout << e << '\n';
-//
-//    std::cout << static_cast<double>(e) << '\n';
-//
-//    return 0;
-//}
+int main()
+{
+    FixedPoint2 a{ 34, 56 };
+    std::cout << a << '\n';
+
+    FixedPoint2 b{ -2, 8 };
+    std::cout << b << '\n';
+
+    FixedPoint2 c{ 2, -8 };
+    std::cout << c << '\n';
+
+    FixedPoint2 d{ -2, -8 };
+    std::cout << d << '\n';
+
+    FixedPoint2 e{ 0, -5 };
+    std::cout << e << '\n';
+
+    std::cout << static_cast<double>(e) << '\n';
+
+    return 0;
+}
 
 // Listing C
 //int main()
