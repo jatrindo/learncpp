@@ -24,6 +24,42 @@
  * Hint: Remember all 8 bit integers are usually chars, so std::cout treats them
  * accordingly
 */
+#include <iostream>
+
+class Average
+{
+private:
+    std::int_least32_t m_sum{};
+    std::int_least8_t m_n{};
+
+public:
+    Average()
+        : m_sum{ 0 }, m_n{ 0 }
+    {
+    }
+
+    Average& operator+=(int value)
+    {
+        m_sum += value;
+        ++m_n;
+        return *this;
+    }
+
+    Average& operator+=(const Average& avg)
+    {
+        m_sum += avg.m_sum;
+        m_n += avg.m_n;
+        return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Average& avg);
+};
+
+std::ostream &operator<<(std::ostream &out, const Average &avg)
+{
+    out << (avg.m_sum / static_cast<double>(avg.m_n));
+    return out;
+}
 
 // [ Listing A]
 int main()
