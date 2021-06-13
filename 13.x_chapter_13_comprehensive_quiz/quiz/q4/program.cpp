@@ -111,6 +111,7 @@
 #include <iostream>
 #include <cstdint>
 #include <cassert>
+#include <cmath> // for std::round
 
 class FixedPoint2
 {
@@ -118,12 +119,12 @@ private:
     std::int_least16_t m_base{ 0 };
     std::int_least8_t m_decimal{ 0 };
 
-public:
-    FixedPoint2(std::int_least16_t base=0, std::int_least8_t decimal=0)
-        : m_base{ base }, m_decimal{ decimal }
+    // Helper function to check sanity of decimal and base parts, as well as
+    // perform any final modifications
+    void finalizeConstruction()
     {
-        assert(std::abs(decimal) < 100
-            && "FixedPoint2(int_least16_t, int_least8_t) - Decimal component not a two digit number" );
+        assert(std::abs(m_decimal) < 100
+            && "finalizeConstruction - Decimal component not a two digit number" );
 
         // If either the base or decimal is negative, ensure that both parts
         // get negative signs
@@ -132,6 +133,47 @@ public:
             m_base = -std::abs(m_base);
             m_decimal = -std::abs(m_decimal);
         }
+
+    }
+
+
+public:
+    FixedPoint2(std::int_least16_t base=0, std::int_least8_t decimal=0)
+        : m_base{ base }, m_decimal{ decimal }
+    {
+        finalizeConstruction();
+    }
+
+    FixedPoint2(double d)
+    {
+        m_base = static_cast<std::int_least16_t>(d);
+
+        // Dealing with precision errors is tricky...
+
+        // If d was entered as something like 5.01, it's actual representation
+        // would be something like 5.0099, which we want represented as 5.01,
+        // rather than 5.00 or 5
+
+        // First extract just the decimal portion of the double and multiply by
+        // 100 so that the 2 digits we want are now to the right of the decimal
+        double decimal_part = (d - static_cast<int>(d)) * 100;
+
+        // For the imprecise bits, round them them to the nearest whole number
+        // now that they're the only ones to the right of the decimal
+        double decimal_part_rounded = std::round(decimal_part);
+
+        m_decimal = static_cast<std::int_least8_t>(decimal_part_rounded);
+
+        // If after rounding, if decimal part became 100, we should add 1 to the base
+        // and have the decimal part be 0
+        if (m_decimal == 100)
+        {
+            ++m_base;
+            m_decimal = 0;
+        }
+
+        // Finally check the sanity of what we've done
+        finalizeConstruction();
     }
 
     operator double() const
@@ -149,51 +191,51 @@ std::ostream& operator<<(std::ostream& out, const FixedPoint2& fp)
 }
 
 // Listing B
-int main()
-{
-    FixedPoint2 a{ 34, 56 };
-    std::cout << a << '\n';
-
-    FixedPoint2 b{ -2, 8 };
-    std::cout << b << '\n';
-
-    FixedPoint2 c{ 2, -8 };
-    std::cout << c << '\n';
-
-    FixedPoint2 d{ -2, -8 };
-    std::cout << d << '\n';
-
-    FixedPoint2 e{ 0, -5 };
-    std::cout << e << '\n';
-
-    std::cout << static_cast<double>(e) << '\n';
-
-    return 0;
-}
-
-// Listing C
 //int main()
 //{
-//    // Handle cases where the argument is representable directly
-//    FixedPoint2 a{ 0.01 };
+//    FixedPoint2 a{ 34, 56 };
 //    std::cout << a << '\n';
 //
-//    FixedPoint2 b{ -0.01 };
+//    FixedPoint2 b{ -2, 8 };
 //    std::cout << b << '\n';
 //
-//    // Handle cases where teh argument has some rounding error
-//    FixedPoint2 c{ 5.01 }; // stored as 5.0099999... so we'll need to round this
+//    FixedPoint2 c{ 2, -8 };
 //    std::cout << c << '\n';
 //
-//    FixedPoint2 d{ -5.01 }; //  stored as -5.0099999... so we'll need to round this
+//    FixedPoint2 d{ -2, -8 };
 //    std::cout << d << '\n';
 //
-//    // Hnadle case where the argument's decimal rounds to 100 (need to increase base by 1)
-//    FixedPoint2 e{ 106.9978 }; // should be stored with base 107 and decimal 0
+//    FixedPoint2 e{ 0, -5 };
 //    std::cout << e << '\n';
+//
+//    std::cout << static_cast<double>(e) << '\n';
 //
 //    return 0;
 //}
+
+// Listing C
+int main()
+{
+    // Handle cases where the argument is representable directly
+    FixedPoint2 a{ 0.01 };
+    std::cout << a << '\n';
+
+    FixedPoint2 b{ -0.01 };
+    std::cout << b << '\n';
+
+    // Handle cases where teh argument has some rounding error
+    FixedPoint2 c{ 5.01 }; // stored as 5.0099999... so we'll need to round this
+    std::cout << c << '\n';
+
+    FixedPoint2 d{ -5.01 }; //  stored as -5.0099999... so we'll need to round this
+    std::cout << d << '\n';
+
+    // Hnadle case where the argument's decimal rounds to 100 (need to increase base by 1)
+    FixedPoint2 e{ 106.9978 }; // should be stored with base 107 and decimal 0
+    std::cout << e << '\n';
+
+    return 0;
+}
 
 // Listing D
 //void testAddition()
