@@ -10,7 +10,7 @@
  *
  * In this quiz, we're going to write a class to implement a fixed point number
  * with two fractional digits (e.g. 12.34, 3.00, or 1278.99). Assume that the
- * range of the class should be -32768 to 32767.99, that the fractional
+ * range of the class should be -32768.99 to 32767.99, that the fractional
  * component should hold any two digits, that we don't want precision errors,
  * and that we want to conserver space.
  *
@@ -102,6 +102,11 @@
  * object of type FixedPoint2, and assign it to you FixedPoint2 function parameter
  *
 */
+
+// Soln to A:
+//
+// Have a 16-bit signed integer hold the non-fraactional part of the
+// number, and a 8-bit signed integer to hold the fractional component
 
 // Listing B
 //int main()
