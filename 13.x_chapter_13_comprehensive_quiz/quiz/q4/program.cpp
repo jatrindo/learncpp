@@ -110,50 +110,43 @@
 
 #include <iostream>
 #include <cstdint>
+#include <cassert>
 
 class FixedPoint2
 {
 private:
-    std::int_least16_t m_non_frac_part{ 0 };
-    std::int_least8_t m_frac_part{ 0 };
+    std::int_least16_t m_base{ 0 };
+    std::int_least8_t m_decimal{ 0 };
 
 public:
-    FixedPoint2(std::int_least16_t non_frac_part=0, std::int_least8_t frac_part=0)
-        : m_non_frac_part{ non_frac_part }, m_frac_part{ frac_part }
+    FixedPoint2(std::int_least16_t base=0, std::int_least8_t decimal=0)
+        : m_base{ base }, m_decimal{ decimal }
     {
+        assert(std::abs(decimal) < 100
+            && "FixedPoint2(int_least16_t, int_least8_t) - Decimal component not a two digit number" );
+
+        // If either the base or decimal is negative, ensure that both parts
+        // get negative signs
+        if (m_base < 0 || m_decimal < 0)
+        {
+            m_base = -std::abs(m_base);
+            m_decimal = -std::abs(m_decimal);
+        }
     }
 
     operator double() const
     {
-        return m_non_frac_part + (static_cast<double>(m_frac_part) / 100);
-    }
-
-    // Whoops, extra
-    //FixedPoint2(double d)
-    //    : m_non_frac_part{ static_cast<std::int_least16_t>(d) }, m_frac_part{ static_cast<std::int_least8_t>((d - static_cast<int>(d) * 100)) }
-    //{
-    //}
-
-    friend std::ostream& operator<<(std::ostream& out, const FixedPoint2& fp)
-    {
-        // Output a negative sign if either of the parts are negative
-        if (fp.m_non_frac_part < 0 || fp.m_frac_part < 0)
-            out << '-';
-
-        // Output non-frac component and decimal
-        out << std::abs(static_cast<double>(fp.m_non_frac_part)) << '.';
-
-        // Output frac component
-
-        // If we're in the single digits, output a leading zero
-        if (std::abs(fp.m_frac_part) < 10)
-            out << '0';
-
-        out << std::abs(static_cast<double>(fp.m_frac_part));
-
-        return out;
+        return m_base + (static_cast<double>(m_decimal) / 100);
     }
 };
+
+// We take advantage of the double cast so operator<< doesn't need direct
+// access to the internals of the FixedPoint2 class -- nice!
+std::ostream& operator<<(std::ostream& out, const FixedPoint2& fp)
+{
+    out << static_cast<double>(fp);
+    return out;
+}
 
 // Listing B
 int main()
