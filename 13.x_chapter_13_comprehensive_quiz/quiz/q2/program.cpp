@@ -25,16 +25,16 @@
  * accordingly
 */
 #include <iostream>
+#include <cstdint> // for fixed-width integers
 
 class Average
 {
 private:
-    std::int_least32_t m_sum{};
-    std::int_least8_t m_n{};
+    std::int_least32_t m_sum{ 0 };
+    std::int_least8_t m_n{ 0 };
 
 public:
     Average()
-        : m_sum{ 0 }, m_n{ 0 }
     {
     }
 
@@ -42,13 +42,6 @@ public:
     {
         m_sum += value;
         ++m_n;
-        return *this;
-    }
-
-    Average& operator+=(const Average& avg)
-    {
-        m_sum += avg.m_sum;
-        m_n += avg.m_n;
         return *this;
     }
 
