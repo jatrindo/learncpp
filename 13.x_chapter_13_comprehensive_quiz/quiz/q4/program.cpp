@@ -144,35 +144,10 @@ public:
         finalizeConstruction();
     }
 
-    FixedPoint2(double d)
+    FixedPoint2(double d):
+        m_base{ static_cast<std::int_least16_t>(std::round(d * 100) / 100) },
+        m_decimal{ static_cast<std::int_least8_t>(std::round(d * 100) - m_base * 100) }
     {
-        m_base = static_cast<std::int_least16_t>(d);
-
-        // Dealing with precision errors is tricky...
-
-        // If d was entered as something like 5.01, it's actual representation
-        // would be something like 5.0099, which we want represented as 5.01,
-        // rather than 5.00 or 5
-
-        // First extract just the decimal portion of the double and multiply by
-        // 100 so that the 2 digits we want are now to the right of the decimal
-        double decimal_part = (d - static_cast<int>(d)) * 100;
-
-        // For the imprecise bits, round them them to the nearest whole number
-        // now that they're the only ones to the right of the decimal
-        double decimal_part_rounded = std::round(decimal_part);
-
-        m_decimal = static_cast<std::int_least8_t>(decimal_part_rounded);
-
-        // If after rounding, if decimal part became 100, we should add 1 to the base
-        // and have the decimal part be 0
-        if (m_decimal == 100)
-        {
-            ++m_base;
-            m_decimal = 0;
-        }
-
-        // Finally check the sanity of what we've done
         finalizeConstruction();
     }
 
