@@ -7,6 +7,8 @@
 */
 #include <iostream>
 #include <string>
+#include <functional>
+#include <vector>
 
 // Listing E
 class Teacher
@@ -20,18 +22,33 @@ public:
     {
     }
 
-    const std::string& getName() const { return m_name };
+    const std::string& getName() const { return m_name; };
 };
 
 class Department
 {
 private:
-    const Teacher& m_teacher; // This dept holds only one teacher for simplicity, but it could hold many teachers
+   //const Teacher& m_teacher; // This dept holds only one teacher for simplicity, but it could hold many teachers
+   std::vector<std::reference_wrapper<Teacher>> m_teachers{};
 
 public:
-    Department(const Teacher& teacher)
-        : m_teacher{ teacher }
+    Department() = default;
+
+    Department& add(Teacher& teacher)
     {
+        m_teachers.push_back(teacher);
+        return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Department& department)
+    {
+        out << "Department: ";
+        for (auto teacher: department.m_teachers)
+        {
+            out << teacher.get().getName() << ' ';
+        }
+        out << '\n';
+        return out;
     }
 };
 
