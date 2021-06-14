@@ -29,12 +29,12 @@ class Department
 {
 private:
    //const Teacher& m_teacher; // This dept holds only one teacher for simplicity, but it could hold many teachers
-   std::vector<std::reference_wrapper<Teacher>> m_teachers{};
+   std::vector<std::reference_wrapper<const Teacher>> m_teachers{};
 
 public:
     Department() = default;
 
-    Department& add(Teacher& teacher)
+    Department& add(const Teacher& teacher)
     {
         m_teachers.push_back(teacher);
         return *this;
@@ -43,11 +43,13 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const Department& department)
     {
         out << "Department: ";
+
         for (auto teacher: department.m_teachers)
         {
             out << teacher.get().getName() << ' ';
-        }
+
         out << '\n';
+
         return out;
     }
 };
