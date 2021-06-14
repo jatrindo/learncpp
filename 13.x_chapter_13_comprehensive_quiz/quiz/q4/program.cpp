@@ -155,31 +155,32 @@ public:
         return m_base + (static_cast<double>(m_decimal) / 100);
     }
 
-    bool operator==(FixedPoint2& other);
-    FixedPoint2& operator-();
+    // Implemented as friend function since the left operand is not modified
+    friend bool operator==(FixedPoint2 &fp1, FixedPoint2 &fp2)
+    {
+        return (fp1.m_base == fp2.m_base && fp1.m_decimal == fp2.m_decimal);
+    }
+
+    // Implemented as member function
+    FixedPoint2 operator-() const
+    {
+        // m_base and m_decimal need to be casted, since the negative sign
+        // converts them to int
+        return FixedPoint2{
+            static_cast<std::int_least16_t>(-m_base),
+            static_cast<std::int_least8_t>(-m_decimal)
+        };
+    }
 };
-
-// Implemented as member function
-bool FixedPoint2::operator==(FixedPoint2& other)
-{
-    return ((this->m_base == other.m_base) && (this->m_decimal == other.m_decimal));
-}
-
-// Implemented as member function
-FixedPoint2& FixedPoint2::operator-()
-{
-    this->m_base = -this->m_base;
-    this->m_decimal = -this->m_decimal;
-    return *this;
-}
 
 // Can be implemented as a normal function (as opposed to friend) since we
 // don't need access to the internals
-void operator>>(std::istream &in, FixedPoint2 &fp)
+std::istream& operator>>(std::istream &in, FixedPoint2 &fp)
 {
     double d{};
     in >> d;
     fp = FixedPoint2{ d };
+    return in;
 }
 
 // Can be a normal function, since we can take advantage of the double cast
