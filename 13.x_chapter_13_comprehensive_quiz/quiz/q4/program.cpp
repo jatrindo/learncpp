@@ -136,7 +136,6 @@ private:
 
     }
 
-
 public:
     FixedPoint2(std::int_least16_t base=0, std::int_least8_t decimal=0)
         : m_base{ base }, m_decimal{ decimal }
@@ -155,7 +154,39 @@ public:
     {
         return m_base + (static_cast<double>(m_decimal) / 100);
     }
+
+    bool operator==(FixedPoint2& other);
+    FixedPoint2& operator-();
 };
+
+// Implemented as member function
+bool FixedPoint2::operator==(FixedPoint2& other)
+{
+    return ((this->m_base == other.m_base) && (this->m_decimal == other.m_decimal));
+}
+
+// Implemented as member function
+FixedPoint2& FixedPoint2::operator-()
+{
+    this->m_base = -this->m_base;
+    this->m_decimal = -this->m_decimal;
+    return *this;
+}
+
+// Can be implemented as a normal function (as opposed to friend) since we
+// don't need access to the internals
+void operator>>(std::istream &in, FixedPoint2 &fp)
+{
+    double d{};
+    in >> d;
+    fp = FixedPoint2{ d };
+}
+
+// Can be a normal function, since we can take advantage of the double cast
+FixedPoint2 operator+(const FixedPoint2 &fp1, const FixedPoint2 &fp2)
+{
+    return FixedPoint2{ static_cast<double>(fp1) + static_cast<double>(fp2) };
+}
 
 // We take advantage of the double cast so operator<< doesn't need direct
 // access to the internals of the FixedPoint2 class -- nice!
@@ -189,57 +220,57 @@ std::ostream& operator<<(std::ostream& out, const FixedPoint2& fp)
 //}
 
 // Listing C
-int main()
-{
-    // Handle cases where the argument is representable directly
-    FixedPoint2 a{ 0.01 };
-    std::cout << a << '\n';
-
-    FixedPoint2 b{ -0.01 };
-    std::cout << b << '\n';
-
-    // Handle cases where teh argument has some rounding error
-    FixedPoint2 c{ 5.01 }; // stored as 5.0099999... so we'll need to round this
-    std::cout << c << '\n';
-
-    FixedPoint2 d{ -5.01 }; //  stored as -5.0099999... so we'll need to round this
-    std::cout << d << '\n';
-
-    // Hnadle case where the argument's decimal rounds to 100 (need to increase base by 1)
-    FixedPoint2 e{ 106.9978 }; // should be stored with base 107 and decimal 0
-    std::cout << e << '\n';
-
-    return 0;
-}
-
-// Listing D
-//void testAddition()
-//{
-//    // h/t to reader Sharjeel Safdar for this function
-//    std::cout << std::boolalpha;
-//    std::cout << (FixedPoint2{0.75} + FixedPoint2{1.23} == FixedPoint2{1.98}) << '\n';    // both positive, no decimal overflow
-//    std::cout << (FixedPoint2{0.75} + FixedPoint2{1.50} == FixedPoint2{2.25}) << '\n';    // both positive, with decimal overflow
-//    std::cout << (FixedPoint2{-0.75} + FixedPoint2{-1.23} == FixedPoint2{-1.98}) << '\n'; // both negative, no decimal overflow
-//    std::cout << (FixedPoint2{-0.75} + FixedPoint2{-1.50} == FixedPoint2{-2.25}) << '\n'; // both negative, with decimal overflow
-//    std::cout << (FixedPoint2{0.75} + FixedPoint2{-1.23} == FixedPoint2{-0.48}) << '\n';  // second negative, no decimal overflow
-//    std::cout << (FixedPoint2{0.75} + FixedPoint2{-1.50} == FixedPoint2{-0.75}) << '\n';  // second negative, possible decimal overflow
-//    std::cout << (FixedPoint2{-0.75} + FixedPoint2{1.23} == FixedPoint2{0.48}) << '\n';   // first negative, no decimal overflow
-//    std::cout << (FixedPoint2{-0.75} + FixedPoint2{1.50} == FixedPoint2{0.75}) << '\n';   // first negative, possible decimal overflow
-//}
-//
 //int main()
 //{
-//    testAddition();
-//
-//    FixedPoint2 a{-0.48};
+//    // Handle cases where the argument is representable directly
+//    FixedPoint2 a{ 0.01 };
 //    std::cout << a << '\n';
 //
-//    std::cout << -a << '\n';
+//    FixedPoint2 b{ -0.01 };
+//    std::cout << b << '\n';
 //
-//    std::cout << "Enter a number: "; // enter 5.678
-//    std::cin >> a;
+//    // Handle cases where teh argument has some rounding error
+//    FixedPoint2 c{ 5.01 }; // stored as 5.0099999... so we'll need to round this
+//    std::cout << c << '\n';
 //
-//    std::cout << "You entered: " << a << '\n';
+//    FixedPoint2 d{ -5.01 }; //  stored as -5.0099999... so we'll need to round this
+//    std::cout << d << '\n';
+//
+//    // Hnadle case where the argument's decimal rounds to 100 (need to increase base by 1)
+//    FixedPoint2 e{ 106.9978 }; // should be stored with base 107 and decimal 0
+//    std::cout << e << '\n';
 //
 //    return 0;
 //}
+
+// Listing D
+void testAddition()
+{
+    // h/t to reader Sharjeel Safdar for this function
+    std::cout << std::boolalpha;
+    std::cout << (FixedPoint2{0.75} + FixedPoint2{1.23} == FixedPoint2{1.98}) << '\n';    // both positive, no decimal overflow
+    std::cout << (FixedPoint2{0.75} + FixedPoint2{1.50} == FixedPoint2{2.25}) << '\n';    // both positive, with decimal overflow
+    std::cout << (FixedPoint2{-0.75} + FixedPoint2{-1.23} == FixedPoint2{-1.98}) << '\n'; // both negative, no decimal overflow
+    std::cout << (FixedPoint2{-0.75} + FixedPoint2{-1.50} == FixedPoint2{-2.25}) << '\n'; // both negative, with decimal overflow
+    std::cout << (FixedPoint2{0.75} + FixedPoint2{-1.23} == FixedPoint2{-0.48}) << '\n';  // second negative, no decimal overflow
+    std::cout << (FixedPoint2{0.75} + FixedPoint2{-1.50} == FixedPoint2{-0.75}) << '\n';  // second negative, possible decimal overflow
+    std::cout << (FixedPoint2{-0.75} + FixedPoint2{1.23} == FixedPoint2{0.48}) << '\n';   // first negative, no decimal overflow
+    std::cout << (FixedPoint2{-0.75} + FixedPoint2{1.50} == FixedPoint2{0.75}) << '\n';   // first negative, possible decimal overflow
+}
+
+int main()
+{
+    testAddition();
+
+    FixedPoint2 a{-0.48};
+    std::cout << a << '\n';
+
+    std::cout << -a << '\n';
+
+    std::cout << "Enter a number: "; // enter 5.678
+    std::cin >> a;
+
+    std::cout << "You entered: " << a << '\n';
+
+    return 0;
+}
