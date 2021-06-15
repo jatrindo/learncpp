@@ -52,9 +52,15 @@ public:
 
     IntArray& operator=(std::initializer_list<int> list)
     {
-        // Delete and replace the current data we have
-        delete[] m_data;
-        m_length = list.size();
+        // If the new list is a different size than the old one, reallocate it
+        int length{ static_cast<int>(list.size()) };
+        if (length != m_length)
+        {
+            // Delete and replace the current data we have
+            delete[] m_data;
+            m_length = length;
+            m_data = new int[length];
+        }
 
         // Then copy in the new list data
         int count{ 0 };
