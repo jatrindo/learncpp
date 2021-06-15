@@ -50,6 +50,23 @@ public:
     IntArray(const IntArray&) = delete; // to avoid shallow copies
     IntArray& operator=(const IntArray& list) = delete; // to avoid shallow copies
 
+    IntArray& operator=(std::initializer_list<int> list)
+    {
+        // Delete and replace the current data we have
+        delete[] m_data;
+        m_length = list.size();
+
+        // Then copy in the new list data
+        int count{ 0 };
+        for (auto element: list)
+        {
+            m_data[count] = element;
+            ++count;
+        }
+
+        return *this;
+    }
+
     int& operator[](int index)
     {
         assert(index >= 0 && index < m_length);
