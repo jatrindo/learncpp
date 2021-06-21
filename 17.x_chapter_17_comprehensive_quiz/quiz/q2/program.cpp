@@ -48,6 +48,11 @@ public:
         : Fruit{ "apple", color }
     {
     }
+
+    Apple(const std::string& name, const std::string& color)
+        : Fruit{ name, color }
+    {
+    }
 };
 
 class Banana: public Fruit
@@ -55,6 +60,15 @@ class Banana: public Fruit
 public:
     Banana()
         : Fruit{ "banana", "yellow" }
+    {
+    }
+};
+
+class GrannySmith: public Apple
+{
+public:
+    GrannySmith()
+        : Apple{ "granny smith apple", "green" }
     {
     }
 };
