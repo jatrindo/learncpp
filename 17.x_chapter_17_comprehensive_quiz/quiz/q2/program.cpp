@@ -37,8 +37,8 @@ public:
     {
     }
 
-    std::string& getName() { return m_name; };
-    std::string& getColor() { return m_color; };
+    const std::string& getName() const { return m_name; };
+    const std::string& getColor() const { return m_color; };
 };
 
 class Apple: public Fruit
@@ -49,6 +49,7 @@ public:
     {
     }
 
+protected: // protected so only derived classes can access
     Apple(const std::string& name, const std::string& color)
         : Fruit{ name, color }
     {
