@@ -11,6 +11,42 @@
  *  My banana is yellow.
  * 
  */
+#include <iostream>
+#include <string>
+
+class Fruit
+{
+private:
+    std::string m_name{};
+    std::string m_color{};
+
+public:
+    Fruit(const std::string& name, const std::string& color)
+        : m_name{ name }, m_color{ color }
+    {
+    }
+
+    std::string& getName() { return m_name; };
+    std::string& getColor() { return m_color; };
+};
+
+class Apple: public Fruit
+{
+public:
+    Apple(const std::string& color)
+        : Fruit{ "apple", color }
+    {
+    }
+};
+
+class Banana: public Fruit
+{
+public:
+    Banana()
+        : Fruit{ "banana", "yellow" }
+    {
+    }
+};
 
 // Listing M
 int main()
