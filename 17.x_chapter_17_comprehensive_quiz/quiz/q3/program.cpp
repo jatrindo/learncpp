@@ -186,7 +186,7 @@
 
 class Creature
 {
-private:
+protected:
     std::string m_name{};
     char m_symbol{};
     int m_health{};
@@ -211,13 +211,54 @@ public:
     void addGold(int amount) { m_gold += amount; }
 };
 
+class Player: public Creature
+{
+private:
+    int m_level{};
+
+public:
+    Player(std::string_view name)
+        : Creature{ name, '@', 10, 1, 0 }
+    {
+    }
+
+    int getLevel() { return m_level; }
+
+    void levelUp()
+    {
+        m_level += 1;
+        m_damage += 1;
+    }
+
+    bool hasWon()
+    {
+        return ( m_level >= 20 );
+    }
+};
+
 // Listing MA
+//int main()
+//{
+//    Creature o{ "orc", 'o', 4, 2, 10};
+//    o.addGold(5);
+//    o.reduceHealth(1);
+//    std::cout << "The " << o.getName() << " has " << o.getHealth() << " health and is carrying " << o.getGold() << " gold.\n";
+//
+//    return 0;
+//}
+
+// For part b)
 int main()
 {
-    Creature o{ "orc", 'o', 4, 2, 10};
-    o.addGold(5);
-    o.reduceHealth(1);
-    std::cout << "The " << o.getName() << " has " << o.getHealth() << " health and is carrying " << o.getGold() << " gold.\n";
+    std::cout << "Enter your name: ";
+    std::string name{};
+    std::cin >> name;
+
+    std::cout << "Welcome, " << name << ".\n";
+
+    Player p{name};
+    std::cout << "You have " << p.getHealth() << " health"
+              << " and are carrying " << p.getGold() << " gold.\n";
 
     return 0;
 }
