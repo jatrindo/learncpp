@@ -214,7 +214,7 @@ public:
 class Player: public Creature
 {
 private:
-    int m_level{};
+    int m_level{ 1 };
 
 public:
     Player(std::string_view name)
@@ -222,18 +222,15 @@ public:
     {
     }
 
-    int getLevel() { return m_level; }
 
     void levelUp()
     {
-        m_level += 1;
-        m_damage += 1;
+        ++m_level;
+        ++m_damage;
     }
 
-    bool hasWon()
-    {
-        return ( m_level >= 20 );
-    }
+    int getLevel() { return m_level; }
+    bool hasWon() { return m_level >= 20; }
 };
 
 // Listing MA
@@ -257,8 +254,8 @@ int main()
     std::cout << "Welcome, " << name << ".\n";
 
     Player p{name};
-    std::cout << "You have " << p.getHealth() << " health"
-              << " and are carrying " << p.getGold() << " gold.\n";
+    std::cout << "You have " << p.getHealth() << " health "
+                 "and are carrying " << p.getGold() << " gold.\n";
 
     return 0;
 }
