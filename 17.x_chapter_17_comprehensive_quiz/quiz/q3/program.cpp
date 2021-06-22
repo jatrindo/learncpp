@@ -1,7 +1,4 @@
 /*
- *
- *
- *
  * Challenge time! The following quiz question is more difficult and lengthy.
  *
  * We're going to write a simple game where you fight monsters. The goal of this
@@ -183,11 +180,37 @@
  * potion's effect.
  *
 */
-
-// Listing MA
 #include <iostream>
 #include <string>
 
+class Creature
+{
+private:
+    std::string m_name{};
+    char m_symbol{};
+    int m_health{};
+    int m_damage{};
+    int m_gold{};
+
+public:
+
+    Creature(const std::string& name, char symbol, int health, int damage, int gold)
+        : m_name{ name }, m_symbol{ symbol }, m_health{ health }, m_damage{ damage }, m_gold{ gold }
+    {
+    }
+
+    std::string& getName() { return m_name; }
+    char getSymbol() { return m_symbol; }
+    int getHealth() { return m_health; }
+    int getDamage() { return m_damage; }
+    int getGold() { return m_gold; }
+
+    void reduceHealth(int amount) { m_health -= amount; }
+    bool isDead() { return (m_health <= 0); }
+    void addGold(int amount) { m_gold += amount; }
+};
+
+// Listing MA
 int main()
 {
     Creature o{ "orc", 'o', 4, 2, 10};
