@@ -182,6 +182,7 @@
 */
 #include <iostream>
 #include <string>
+#include <string_view> // Requires C++17
 
 class Creature
 {
@@ -194,12 +195,12 @@ private:
 
 public:
 
-    Creature(const std::string& name, char symbol, int health, int damage, int gold)
+    Creature(const std::string_view name, char symbol, int health, int damage, int gold)
         : m_name{ name }, m_symbol{ symbol }, m_health{ health }, m_damage{ damage }, m_gold{ gold }
     {
     }
 
-    std::string& getName() { return m_name; }
+    const std::string& getName() { return m_name; }
     char getSymbol() { return m_symbol; }
     int getHealth() { return m_health; }
     int getDamage() { return m_damage; }
