@@ -233,6 +233,19 @@ public:
     bool hasWon() { return m_level >= 20; }
 };
 
+class Monster: public Creature
+{
+public:
+    enum class Type
+    {
+        DRAGON,
+        ORC,
+        SLIME,
+
+        MAX_TYPES
+    };
+};
+
 // Listing MA
 //int main()
 //{
