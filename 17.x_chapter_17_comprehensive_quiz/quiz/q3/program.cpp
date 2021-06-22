@@ -187,6 +187,18 @@
 #include <cstdlib> // for rand() and srand()
 #include <ctime> // for time()
 
+// Generate a random number between min and max (inclusive)
+// Assumes std::srand() has already been called
+// Assumes max - min <= RAND_MAX
+int getRandomNumber(int min, int max)
+{
+    // static used for efficiency, so we only calculate this value once
+    static constexpr double fraction{ 1.0 / (RAND_MAX + 1.0) };
+
+    // evenly distribute this random number across our range
+    return min + static_cast<int>((max - min + 1) * (std::rand() * fraction));
+}
+
 class Creature
 {
 protected:
@@ -271,16 +283,7 @@ public:
 
     static Monster getRandomMonster()
     {
-        static constexpr double fraction{1.0 / (RAND_MAX + 1.0)}; // static used for efficiency, so we only calculate this value once
-        // evenly distribute the random number across our range
-
-        // Set minimum and maximim for our range -- static since these don't change
-        static int min{ 0 };
-        static int max{ static_cast<int>(Type::MAX_TYPES) - 1 };
-
-        // Generate the random index [min, max]
-        int randomIndex{ min + static_cast<int>((max - min + 1) * (std::rand() * fraction)) };
-
+        int randomIndex{ getRandomNumber(0, static_cast<int>(Type::MAX_TYPES)) };
         return Monster{ static_cast<Type>(randomIndex) };
     }
 };
