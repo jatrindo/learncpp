@@ -184,6 +184,8 @@
 #include <string>
 #include <string_view> // Requires C++17
 #include <array>
+#include <cstdlib> // for rand() and srand()
+#include <ctime> // for time()
 
 class Creature
 {
@@ -266,6 +268,21 @@ public:
         : Creature{ getDefaultCreature(type) }
     {
     }
+
+    static Monster getRandomMonster()
+    {
+        static constexpr double fraction{1.0 / (RAND_MAX + 1.0)}; // static used for efficiency, so we only calculate this value once
+        // evenly distribute the random number across our range
+
+        // Set minimum and maximim for our range -- static since these don't change
+        static int min{ 0 };
+        static int max{ static_cast<int>(Type::MAX_TYPES) - 1 };
+
+        // Generate the random index [min, max]
+        int randomIndex{ min + static_cast<int>((max - min + 1) * (std::rand() * fraction)) };
+
+        return Monster{ static_cast<Type>(randomIndex) };
+    }
 };
 
 // Listing MA
@@ -296,34 +313,29 @@ public:
 //}
 
 // Listing MD
-#include <iostream>
-#include <string>
-
-int main()
-{
-    Monster m{ Monster::Type::ORC };
-    std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
-
-    return 0;
-}
-
-// Listing ME
 //#include <iostream>
 //#include <string>
-//#include <cstdlib> // for rand() and srand()
-//#include <ctime> // for time()
 //
 //int main()
 //{
-//    // set initial seed value to system clock
-//    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-//    std::rand(); // get rid of first result
-//
-//    for (int i{ 0 }; i < 10; ++i)
-//    {
-//        Monster m{ Monster::getRandomMonster() };
-//        std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
-//    }
+//    Monster m{ Monster::Type::ORC };
+//    std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
 //
 //    return 0;
 //}
+
+// Listing ME
+int main()
+{
+    // set initial seed value to system clock
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    std::rand(); // get rid of first result
+
+    for (int i{ 0 }; i < 10; ++i)
+    {
+        Monster m{ Monster::getRandomMonster() };
+        std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
+    }
+
+    return 0;
+}
