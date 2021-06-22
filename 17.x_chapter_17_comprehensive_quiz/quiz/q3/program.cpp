@@ -183,6 +183,7 @@
 #include <iostream>
 #include <string>
 #include <string_view> // Requires C++17
+#include <array>
 
 class Creature
 {
@@ -244,6 +245,27 @@ public:
 
         MAX_TYPES
     };
+
+private:
+    static const Creature& getDefaultCreature(Type type)
+    {
+        static std::array<Creature, static_cast<std::size_t>(Type::MAX_TYPES)> monsterData
+        {
+            {
+                { "dragon", 'D', 20, 4, 100 },
+                { "orc", 'o', 4, 2, 25 },
+                { "slime", 's', 1, 1, 10 }
+            }
+        };
+
+        return monsterData.at(static_cast<std::size_t>(type));
+    }
+
+public:
+    Monster( Type type )
+        : Creature{ getDefaultCreature(type) }
+    {
+    }
 };
 
 // Listing MA
@@ -258,32 +280,32 @@ public:
 //}
 
 // For part b)
-int main()
-{
-    std::cout << "Enter your name: ";
-    std::string name{};
-    std::cin >> name;
-
-    std::cout << "Welcome, " << name << ".\n";
-
-    Player p{name};
-    std::cout << "You have " << p.getHealth() << " health "
-                 "and are carrying " << p.getGold() << " gold.\n";
-
-    return 0;
-}
-
-// Listing MD
-//#include <iostream>
-//#include <string>
-//
 //int main()
 //{
-//    Monster m{ Monster::Type::orc };
-//    std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
+//    std::cout << "Enter your name: ";
+//    std::string name{};
+//    std::cin >> name;
+//
+//    std::cout << "Welcome, " << name << ".\n";
+//
+//    Player p{name};
+//    std::cout << "You have " << p.getHealth() << " health "
+//                 "and are carrying " << p.getGold() << " gold.\n";
 //
 //    return 0;
 //}
+
+// Listing MD
+#include <iostream>
+#include <string>
+
+int main()
+{
+    Monster m{ Monster::Type::ORC };
+    std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
+
+    return 0;
+}
 
 // Listing ME
 //#include <iostream>
