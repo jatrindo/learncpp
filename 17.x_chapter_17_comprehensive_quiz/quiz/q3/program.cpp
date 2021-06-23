@@ -283,7 +283,7 @@ public:
 
     static Monster getRandomMonster()
     {
-        int randomIndex{ getRandomNumber(0, static_cast<int>(Type::MAX_TYPES)) };
+        int randomIndex{ getRandomNumber(0, static_cast<int>(Type::MAX_TYPES) - 1) };
         return Monster{ static_cast<Type>(randomIndex) };
     }
 };
@@ -328,16 +328,166 @@ public:
 //}
 
 // Listing ME
+//int main()
+//{
+//    // set initial seed value to system clock
+//    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+//    std::rand(); // get rid of first result
+//
+//    for (int i{ 0 }; i < 10; ++i)
+//    {
+//        Monster m{ Monster::getRandomMonster() };
+//        std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
+//    }
+//
+//    return 0;
+//}
+
+// For part f)
+
+// Returns true if the attack kills the monster
+bool attackMonster(Player &player, Monster &monster)
+{
+    // Attack the monster
+    int damage{ player.getDamage() };
+
+    monster.reduceHealth(damage);
+    std::cout << "You hit the " << monster.getName() << " for " << damage << " damage.\n";
+
+    // Player slays the monster -- they level up and receive gold
+    if (monster.isDead())
+    {
+        // Report
+        return true;
+    }
+
+    return false; // Monster still lives
+}
+
+// Returns true if the attack kills the player
+bool attackPlayer(Player &player, Monster &monster)
+{
+    // Monster attacks the player
+    int damage{ monster.getDamage() };
+
+    player.reduceHealth(damage);
+    std::cout << "The " << monster.getName() << " hit you for " << damage << " damage.\n";
+
+    return player.isDead();
+}
+
+
+// Returns true if the player wants to fight, false if to run
+bool fightOrRun()
+{
+
+    char response{};
+    while (response != 'f' && response != 'F' && response != 'r' && response != 'R')
+    {
+        std::cout << "(R)un or (F)ight: ";
+        std::cin >> response; // TD: Bug with input! (newline?)
+    }
+
+    return (response == 'f' || response == 'F');
+}
+
+// Attempt an escape. Return true if successful, false otherwise
+bool attemptEscape()
+{
+    // Minimum and maximum values for our roll
+    constexpr static int min{1};   // inclusive
+    constexpr static int max{100}; // inclusive
+
+    // Threshhold -- above this threshold the player successfuly escapes
+    constexpr static int threshold{50}; // 50% chance of winning
+
+    // Roll and return if above threshold
+    return (getRandomNumber(min, max) > threshold);
+}
+
+void fightMonster(Player& player, Monster& monster)
+{
+    // Keep fighting while neither the player nor monster are dead
+    while (true) // we fight to the death! (or someone runs away)
+    {
+        // Choose to fight or run
+        if (fightOrRun())
+        {
+            // Player Wants to fight -- gets to attack first
+            if (attackMonster(player, monster))
+                break; // Monster has died, end the encounter
+
+            // Otherwise the monster gets to attack
+            if (attackPlayer(player, monster))
+                break; // Player has died, end the encounter
+        }
+        else
+        {
+            // Attempt the escape
+            if (!attemptEscape())
+            {
+                std::cout << "You failed to flee!\n";
+                // Failed to escape -- Monster attacks!
+                if (attackPlayer(player, monster))
+                    break; // Player has died, end the encounter
+            }
+            else
+            {
+                // Player escapes successfully, end the encounter
+                std::cout << "You successfully fled.\n";
+                    break;
+            }
+        }
+    }
+
+    return;
+}
+
 int main()
 {
-    // set initial seed value to system clock
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    std::rand(); // get rid of first result
+    // Create the player
+    std::cout << "Enter your name: ";
+    std::string playerName{};
+    std::cin >> playerName;
 
-    for (int i{ 0 }; i < 10; ++i)
+    std::cout << "Welcome, " << playerName << '\n';
+
+    Player player{playerName};
+
+    // The game runs while the player hasn't died or reached lvl 20
+    while (!player.hasWon())
     {
-        Monster m{ Monster::getRandomMonster() };
-        std::cout << "A " << m.getName() << " (" << m.getSymbol() << ") was created.\n";
+        // Spawn and encounter a monster
+        Monster monster{ Monster::getRandomMonster() };
+        std::cout << "You've encountered a " << monster.getName()
+                  << '(' << monster.getSymbol() << ").\n";
+
+        // Begin the fight
+        fightMonster(player, monster);
+
+        // Check who died
+        if (player.isDead())
+        {
+            std::cout << "You died at level " << player.getLevel()
+                      << " and with " << player.getGold() << " gold.\n";
+            std::cout << "Too bad you can't take it with you!\n";
+            break; // Exit the game
+        }
+
+        if (monster.isDead())
+        {
+            std::cout << "You killed the " << monster.getName() << ".\n";
+            // Update player stats
+            player.levelUp();
+            std::cout << "You are now level " << player.getLevel() << ".\n";
+            player.addGold(monster.getGold());
+            std::cout << "You found " << monster.getGold() << " gold.\n";
+        }
+    }
+
+    if (player.hasWon())
+    {
+        std::cout << "*** Congratulations! You reached level 20 and won! ***\n";
     }
 
     return 0;
