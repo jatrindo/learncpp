@@ -344,103 +344,90 @@ public:
 //}
 
 // For part f)
-
-// Returns true if the attack kills the monster
-bool attackMonster(Player &player, Monster &monster)
+void attackMonster(Player &player, Monster &monster)
 {
+
+    // If the player is dead, no damage is done
+    if (player.isDead())
+        return;
+
     // Attack the monster
     int damage{ player.getDamage() };
 
     monster.reduceHealth(damage);
     std::cout << "You hit the " << monster.getName() << " for " << damage << " damage.\n";
 
-    // Player slays the monster -- they level up and receive gold
+    // If the monster dies, the player levels up
     if (monster.isDead())
     {
-        // Report
-        return true;
+        std::cout << "You killed the " << monster.getName() << ".\n";
+        // Update player stats
+        player.levelUp();
+        std::cout << "You are now level " << player.getLevel() << ".\n";
+        std::cout << "You found " << monster.getGold() << " gold.\n";
+        player.addGold(monster.getGold());
     }
-
-    return false; // Monster still lives
 }
 
-// Returns true if the attack kills the player
-bool attackPlayer(Player &player, Monster &monster)
+void attackPlayer(Player &player, Monster &monster)
 {
+    // If the monster is dead, no damage is done
+    if (monster.isDead())
+        return;
+
     // Monster attacks the player
     int damage{ monster.getDamage() };
 
     player.reduceHealth(damage);
     std::cout << "The " << monster.getName() << " hit you for " << damage << " damage.\n";
-
-    return player.isDead();
-}
-
-
-// Returns true if the player wants to fight, false if to run
-bool fightOrRun()
-{
-
-    char response{};
-    while (response != 'f' && response != 'F' && response != 'r' && response != 'R')
-    {
-        std::cout << "(R)un or (F)ight: ";
-        std::cin >> response; // TD: Bug with input! (newline?)
-    }
-
-    return (response == 'f' || response == 'F');
 }
 
 // Attempt an escape. Return true if successful, false otherwise
 bool attemptEscape()
 {
-    // Minimum and maximum values for our roll
-    constexpr static int min{1};   // inclusive
-    constexpr static int max{100}; // inclusive
-
-    // Threshhold -- above this threshold the player successfuly escapes
-    constexpr static int threshold{50}; // 50% chance of winning
-
-    // Roll and return if above threshold
-    return (getRandomNumber(min, max) > threshold);
+    // 50% chance of success
+    return (getRandomNumber(0, 1) == 0);
 }
 
 void fightMonster(Player& player, Monster& monster)
 {
+    // Print encounter message
+    std::cout << "You've encountered a " << monster.getName()
+              << '(' << monster.getSymbol() << ").\n";
+
     // Keep fighting while neither the player nor monster are dead
-    while (true) // we fight to the death! (or someone runs away)
+    while (!player.isDead() && !monster.isDead())
     {
-        // Choose to fight or run
-        if (fightOrRun())
+        // Ask the user if they want to run or fight
+        char response{};
+        std::cout << "(R)un or (F)ight: ";
+        std::cin >> response;
+
+        if (response == 'f' || response == 'F')
         {
             // Player Wants to fight -- gets to attack first
-            if (attackMonster(player, monster))
-                break; // Monster has died, end the encounter
-
-            // Otherwise the monster gets to attack
-            if (attackPlayer(player, monster))
-                break; // Player has died, end the encounter
+            // Note: If the attacking party is dead, no damage dealt
+            attackMonster(player, monster);
+            attackPlayer(player, monster);
         }
-        else
+
+        if (response == 'r' || response == 'R')
         {
-            // Attempt the escape
+            // Attempt the escape (50% chance of success)
             if (!attemptEscape())
             {
                 std::cout << "You failed to flee!\n";
                 // Failed to escape -- Monster attacks!
-                if (attackPlayer(player, monster))
-                    break; // Player has died, end the encounter
+                attackPlayer(player, monster);
             }
             else
             {
                 // Player escapes successfully, end the encounter
                 std::cout << "You successfully fled.\n";
-                    break;
+                return;
             }
         }
     }
-
-    return;
 }
 
 int main()
@@ -455,39 +442,25 @@ int main()
     Player player{playerName};
 
     // The game runs while the player hasn't died or reached lvl 20
-    while (!player.hasWon())
+    while (!player.hasWon() && !player.isDead())
     {
-        // Spawn and encounter a monster
+        // Spawn a monster
         Monster monster{ Monster::getRandomMonster() };
-        std::cout << "You've encountered a " << monster.getName()
-                  << '(' << monster.getSymbol() << ").\n";
-
         // Begin the fight
         fightMonster(player, monster);
-
-        // Check who died
-        if (player.isDead())
-        {
-            std::cout << "You died at level " << player.getLevel()
-                      << " and with " << player.getGold() << " gold.\n";
-            std::cout << "Too bad you can't take it with you!\n";
-            break; // Exit the game
-        }
-
-        if (monster.isDead())
-        {
-            std::cout << "You killed the " << monster.getName() << ".\n";
-            // Update player stats
-            player.levelUp();
-            std::cout << "You are now level " << player.getLevel() << ".\n";
-            player.addGold(monster.getGold());
-            std::cout << "You found " << monster.getGold() << " gold.\n";
-        }
     }
 
-    if (player.hasWon())
+    // Either the player has died or they won the game
+    if (player.isDead())
     {
-        std::cout << "*** Congratulations! You reached level 20 and won! ***\n";
+        std::cout << "You died at level " << player.getLevel()
+                  << " and with " << player.getGold() << " gold.\n";
+        std::cout << "Too bad you can't take it with you!\n";
+    }
+    else
+    {
+        std::cout << "*** Congratulations! You won the game with "
+                  << player.getGold() << " gold! ***\n";
     }
 
     return 0;
