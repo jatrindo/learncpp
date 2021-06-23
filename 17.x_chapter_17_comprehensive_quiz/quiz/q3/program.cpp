@@ -186,18 +186,100 @@
 #include <array>
 #include <cstdlib> // for rand() and srand()
 #include <ctime> // for time()
+#include <random> // for std::m19937
 
 // Generate a random number between min and max (inclusive)
 // Assumes std::srand() has already been called
 // Assumes max - min <= RAND_MAX
+//int getRandomNumber(int min, int max)
+//{
+//    // static used for efficiency, so we only calculate this value once
+//    static constexpr double fraction{ 1.0 / (RAND_MAX + 1.0) };
+//
+//    // evenly distribute this random number across our range
+//    return min + static_cast<int>((max - min + 1) * (std::rand() * fraction));
+//}
+
+// Generate a random number between min and max (inclusive)
 int getRandomNumber(int min, int max)
 {
-    // static used for efficiency, so we only calculate this value once
-    static constexpr double fraction{ 1.0 / (RAND_MAX + 1.0) };
-
-    // evenly distribute this random number across our range
-    return min + static_cast<int>((max - min + 1) * (std::rand() * fraction));
+	// Initialize our mersenne twister with a random seed based on the clock (once at system startup)
+    static std::mt19937 mersenne{ static_cast<std::mt19937::result_type>(std::time(nullptr)) };
+    // Set up the distribution (inclusive both ends)
+	std::uniform_int_distribution die{ min, max };
+	return die(mersenne); // Generate random number
 }
+
+class Potion
+{
+public:
+    enum class Type
+    {
+        HEALTH,
+        STRENGTH,
+        POSION,
+
+        MAX_TYPES
+    };
+
+    enum class Size
+    {
+        SMALL,
+        MEDIUM,
+        LARGE,
+
+        MAX_SIZES
+    };
+
+private:
+    Type m_type{};
+    Size m_size{};
+
+public:
+    Potion(Type type, Size size)
+        : m_type{ type }, m_size{ size }
+    {
+    }
+
+    static Potion getRandomPotion()
+    {
+        Type type{ static_cast<Type>(getRandomNumber(0, static_cast<int>(Type::MAX_TYPES) - 1)) };
+        Size size{ static_cast<Size>(getRandomNumber(0, static_cast<int>(Size::MAX_SIZES) - 1)) };
+        return Potion{ type, size };
+    }
+
+    std::string& getTypeName()
+    {
+        static std::array<std::string, static_cast<std::size_t>(Type::MAX_TYPES)> types
+        {
+            "Health",
+            "Strength",
+            "Poison"
+        };
+
+        return types.at(static_cast<std::size_t>(m_type));
+    }
+
+    std::string& getSizeName()
+    {
+        static std::array<std::string, static_cast<std::size_t>(Size::MAX_SIZES)> sizes
+        {
+            "Small",
+            "Medium",
+            "Large"
+        };
+
+        return sizes.at(static_cast<std::size_t>(m_size));
+    }
+
+    std::string getName()
+    {
+        return  getSizeName() + " potion of " + getTypeName();
+    }
+
+    Type getType() { return m_type; }
+    Size getSize() { return m_size; }
+};
 
 class Creature
 {
@@ -222,6 +304,8 @@ public:
     int getGold() { return m_gold; }
 
     void reduceHealth(int amount) { m_health -= amount; }
+    void increaseHealth(int amount) { m_health += amount; }
+    void increaseDamage(int amount) { m_damage += amount; }
     bool isDead() { return (m_health <= 0); }
     void addGold(int amount) { m_gold += amount; }
 };
@@ -237,7 +321,6 @@ public:
     {
     }
 
-
     void levelUp()
     {
         ++m_level;
@@ -246,6 +329,32 @@ public:
 
     int getLevel() { return m_level; }
     bool hasWon() { return m_level >= 20; }
+
+    void drinkPotion(Potion& potion)
+    {
+        // Potencies of potion effects, based on size
+        static std::array healthPotencies{ 2, 2, 5 };
+        static std::array strengthPotencies{ 1, 1, 1 };
+        static std::array poisonPotencies{ 1, 1, 1 };
+
+        switch (potion.getType())
+        {
+            case Potion::Type::HEALTH:
+                increaseHealth(
+                    healthPotencies.at(static_cast<std::size_t>(potion.getSize())));
+                break;
+            case Potion::Type::STRENGTH:
+                increaseDamage(
+                    strengthPotencies.at(static_cast<std::size_t>(potion.getSize())));
+                    break;
+            case Potion::Type::POSION:
+                reduceHealth(
+                    poisonPotencies.at(static_cast<std::size_t>(potion.getSize())));
+                break;
+            default:
+                ; // Drinking a potion of unknown type does nothing
+        }
+    }
 };
 
 class Monster: public Creature
@@ -344,6 +453,29 @@ public:
 //}
 
 // For part f)
+
+// Returns true if successfully receives a potion, false otw
+bool rollForPotion()
+{
+    // 30% chance of getting a potion
+    return (getRandomNumber(1, 10) <= 3);
+}
+
+// Returns true if successfully escapes, false otw
+bool rollForEscape()
+{
+    // 50% chance to escape
+    return (getRandomNumber(0, 1) == 0);
+}
+
+// Returns true if the player inputs 'y' or 'Y', false otherwise
+bool respondsYes()
+{
+    char response{};
+    std::cin >> response;
+    return (response == 'y' || response == 'Y');
+}
+
 void attackMonster(Player &player, Monster &monster)
 {
 
@@ -357,15 +489,31 @@ void attackMonster(Player &player, Monster &monster)
     monster.reduceHealth(damage);
     std::cout << "You hit the " << monster.getName() << " for " << damage << " damage.\n";
 
-    // If the monster dies, the player levels up
+    // If the monster dies, several things happen
     if (monster.isDead())
     {
+        // Report
         std::cout << "You killed the " << monster.getName() << ".\n";
+
         // Update player stats
         player.levelUp();
         std::cout << "You are now level " << player.getLevel() << ".\n";
         std::cout << "You found " << monster.getGold() << " gold.\n";
         player.addGold(monster.getGold());
+
+        // Roll for a random potion
+        if (rollForPotion())
+        {
+            // Got a potion!
+            std::cout << "You got a mythical potion! Would you like to drink it? [y/n]: ";
+            if (respondsYes())
+            {
+                Potion potion{ Potion::getRandomPotion() };
+                player.drinkPotion(potion);
+
+                std::cout << "You drank a " << potion.getName() << ".\n";
+            }
+        }
     }
 }
 
@@ -380,13 +528,6 @@ void attackPlayer(Player &player, Monster &monster)
 
     player.reduceHealth(damage);
     std::cout << "The " << monster.getName() << " hit you for " << damage << " damage.\n";
-}
-
-// Attempt an escape. Return true if successful, false otherwise
-bool attemptEscape()
-{
-    // 50% chance of success
-    return (getRandomNumber(0, 1) == 0);
 }
 
 void fightMonster(Player& player, Monster& monster)
@@ -414,7 +555,7 @@ void fightMonster(Player& player, Monster& monster)
         if (response == 'r' || response == 'R')
         {
             // Attempt the escape (50% chance of success)
-            if (!attemptEscape())
+            if (!rollForEscape())
             {
                 std::cout << "You failed to flee!\n";
                 // Failed to escape -- Monster attacks!
