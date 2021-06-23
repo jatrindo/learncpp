@@ -187,6 +187,7 @@
 #include <cstdlib> // for rand() and srand()
 #include <ctime> // for time()
 #include <random> // for std::m19937
+#include <sstream> // for std::stringstream
 
 // Generate a random number between min and max (inclusive)
 // Assumes std::srand() has already been called
@@ -248,9 +249,9 @@ public:
         return Potion{ type, size };
     }
 
-    std::string& getTypeName()
+    std::string_view getTypeName()
     {
-        static std::array<std::string, static_cast<std::size_t>(Type::MAX_TYPES)> types
+        static constexpr std::array types
         {
             "Health",
             "Strength",
@@ -260,9 +261,9 @@ public:
         return types.at(static_cast<std::size_t>(m_type));
     }
 
-    std::string& getSizeName()
+    std::string_view getSizeName()
     {
-        static std::array<std::string, static_cast<std::size_t>(Size::MAX_SIZES)> sizes
+        static constexpr std::array sizes
         {
             "Small",
             "Medium",
@@ -274,7 +275,9 @@ public:
 
     std::string getName()
     {
-        return  getSizeName() + " potion of " + getTypeName();
+        std::stringstream result{};
+        result << getSizeName() << " potion of " <<  getTypeName();
+        return result.str();
     }
 
     Type getType() { return m_type; }
@@ -476,6 +479,32 @@ bool respondsYes()
     return (response == 'y' || response == 'Y');
 }
 
+void onMonsterKilled(Player& player, Monster& monster)
+{
+    // Report
+    std::cout << "You killed the " << monster.getName() << ".\n";
+
+    // Update player stats
+    player.levelUp();
+    std::cout << "You are now level " << player.getLevel() << ".\n";
+    std::cout << "You found " << monster.getGold() << " gold.\n";
+    player.addGold(monster.getGold());
+
+    // Roll for a random potion
+    if (rollForPotion())
+    {
+        // Got a potion!
+        std::cout << "You got a mythical potion! Would you like to drink it? [y/n]: ";
+        if (respondsYes())
+        {
+            Potion potion{Potion::getRandomPotion()};
+            player.drinkPotion(potion);
+
+            std::cout << "You drank a " << potion.getName() << ".\n";
+        }
+    }
+}
+
 void attackMonster(Player &player, Monster &monster)
 {
 
@@ -489,31 +518,10 @@ void attackMonster(Player &player, Monster &monster)
     monster.reduceHealth(damage);
     std::cout << "You hit the " << monster.getName() << " for " << damage << " damage.\n";
 
-    // If the monster dies, several things happen
+    // If the monster dies, the player receives rewards
     if (monster.isDead())
     {
-        // Report
-        std::cout << "You killed the " << monster.getName() << ".\n";
-
-        // Update player stats
-        player.levelUp();
-        std::cout << "You are now level " << player.getLevel() << ".\n";
-        std::cout << "You found " << monster.getGold() << " gold.\n";
-        player.addGold(monster.getGold());
-
-        // Roll for a random potion
-        if (rollForPotion())
-        {
-            // Got a potion!
-            std::cout << "You got a mythical potion! Would you like to drink it? [y/n]: ";
-            if (respondsYes())
-            {
-                Potion potion{ Potion::getRandomPotion() };
-                player.drinkPotion(potion);
-
-                std::cout << "You drank a " << potion.getName() << ".\n";
-            }
-        }
+        onMonsterKilled(player, monster);
     }
 }
 
