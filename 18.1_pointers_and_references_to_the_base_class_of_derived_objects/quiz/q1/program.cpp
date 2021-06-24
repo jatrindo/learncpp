@@ -15,9 +15,10 @@ class Animal
 {
 protected:
     std::string m_name;
+    std::string m_speak;
 
-    Animal(std::string_view name)
-        : m_name{ name }
+    Animal(std::string_view name, std::string_view speak)
+        : m_name{ name }, m_speak{ speak }
     {
     }
 
@@ -27,27 +28,25 @@ protected:
 
 public:
     const std::string &getName() const { return m_name; };
-    std::string_view speak() const { return "???"; };
+    std::string_view speak() const { return m_speak; };
 };
 
 class Cat: public Animal
 {
 public:
     Cat(std::string_view name)
-        : Animal{name}
-    {}
-
-    std::string_view speak() const { return "Meow"; }
+        : Animal{ name, "Meow" }
+    {
+    }
 };
 
 class Dog: public Animal
 {
 public:
     Dog(std::string_view name)
-        : Animal{name}
-    {}
-
-    std::string_view speak() const { return "Woof"; }
+        : Animal{ name, "Woof" }
+    {
+    }
 };
 
 // Listing M
