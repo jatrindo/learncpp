@@ -68,12 +68,12 @@ private:
     Point m_p3;
 
 public:
-    Triangle(Point p1, Point p2, Point p3)
+    Triangle(const Point& p1, const Point& p2, const Point& p3)
         : m_p1{p1}, m_p2{p2}, m_p3{p3}
     {
     }
 
-    virtual std::ostream& print(std::ostream& out) const
+    virtual std::ostream& print(std::ostream& out) const override
     {
         out << "Triangle(" << m_p1 << ", " << m_p2 << ", " << m_p3 << ')';
         return out;
@@ -87,12 +87,12 @@ private:
     int m_radius;
 
 public:
-    Circle(Point center, int radius)
+    Circle(const Point& center, int radius)
         : m_center{ center }, m_radius{ radius }
     {
     }
 
-    virtual std::ostream& print(std::ostream& out) const
+    virtual std::ostream& print(std::ostream& out) const override
     {
         out << "Circle(" << m_center << ", radius " << m_radius << ')';
         return out;
