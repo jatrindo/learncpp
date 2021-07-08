@@ -25,6 +25,8 @@
  * following program: [Listing C]
  */
 #include <iostream>
+#include <vector>
+
 
 class Shape
 {
@@ -98,7 +100,7 @@ public:
         return out;
     }
 
-    int getRadius() { return m_radius; }
+    int getRadius() const { return m_radius; }
 };
 
 // Listing B
@@ -113,16 +115,12 @@ public:
 //    return 0;
 //}
 
-// Listing C
-#include <vector>
-#include <iostream>
-
 int getLargestRadius(std::vector<Shape*> v)
 {
     int largest{};
-    for (auto shape: v)
+    for (const auto* shape: v)
     {
-        Circle *c{ dynamic_cast<Circle *>(shape) };
+        const Circle *c{ dynamic_cast<const Circle *>(shape) };
         if (c != nullptr)
         {
             if (c->getRadius() > largest)
@@ -134,6 +132,7 @@ int getLargestRadius(std::vector<Shape*> v)
     return largest;
 }
 
+// Listing C
 int main()
 {
     std::vector<Shape*> v{
@@ -143,7 +142,7 @@ int main()
     };
 
     // print each shape in vector v on its own line here
-    for (auto shape: v)
+    for (const auto* shape: v)
     {
         std::cout << *shape << '\n';
     }
@@ -151,7 +150,7 @@ int main()
     std::cout << "The largest radius is: " << getLargestRadius(v) << '\n'; // write this functiion
 
     // delete each element in the vector here
-    for (auto shape: v)
+    for (const auto* shape: v)
     {
         delete shape;
     }
