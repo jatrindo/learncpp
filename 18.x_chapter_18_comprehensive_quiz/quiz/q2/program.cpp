@@ -97,37 +97,64 @@ public:
         out << "Circle(" << m_center << ", radius " << m_radius << ')';
         return out;
     }
+
+    int getRadius() { return m_radius; }
 };
 
 // Listing B
-int main()
-{
-    Circle c{ Point{ 1, 2, 3}, 7 };
-    std::cout << c << '\n';
-
-    Triangle t{ Point{ 1, 2, 3}, Point{ 4, 5, 6}, Point{ 7, 8, 9}};
-    std::cout << t << '\n';
-
-    return 0;
-}
-
-// Listing C
-//#include <vector>
-//#include <iostream>
-//
 //int main()
 //{
-//    std::vector<Shape*> v{
-//        new Circle{ Point{1, 2, 3}, 7},
-//        new Triangle{ Point{1, 2, 3}, Point{4, 5, 6}, Point{7, 8, 9}},
-//        new Circle{ Point{4, 5, 6}, 3}
-//    };
+//    Circle c{ Point{ 1, 2, 3}, 7 };
+//    std::cout << c << '\n';
 //
-//    // print each shape in vector v on its own line here
-//
-//    std::cout << "The largest radius is: " << getLargestRadius(v) << '\n'; // write this functiion
-//
-//    // delee each element in the vector here
+//    Triangle t{ Point{ 1, 2, 3}, Point{ 4, 5, 6}, Point{ 7, 8, 9}};
+//    std::cout << t << '\n';
 //
 //    return 0;
 //}
+
+// Listing C
+#include <vector>
+#include <iostream>
+
+int getLargestRadius(std::vector<Shape*> v)
+{
+    int largest{};
+    for (auto shape: v)
+    {
+        Circle *c{ dynamic_cast<Circle *>(shape) };
+        if (c != nullptr)
+        {
+            if (c->getRadius() > largest)
+            {
+                largest = c->getRadius();
+            }
+        }
+    }
+    return largest;
+}
+
+int main()
+{
+    std::vector<Shape*> v{
+        new Circle{ Point{1, 2, 3}, 7},
+        new Triangle{ Point{1, 2, 3}, Point{4, 5, 6}, Point{7, 8, 9}},
+        new Circle{ Point{4, 5, 6}, 3}
+    };
+
+    // print each shape in vector v on its own line here
+    for (auto shape: v)
+    {
+        std::cout << *shape << '\n';
+    }
+
+    std::cout << "The largest radius is: " << getLargestRadius(v) << '\n'; // write this functiion
+
+    // delete each element in the vector here
+    for (auto shape: v)
+    {
+        delete shape;
+    }
+
+    return 0;
+}
