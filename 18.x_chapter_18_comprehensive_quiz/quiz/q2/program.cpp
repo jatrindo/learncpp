@@ -24,6 +24,20 @@
  * 2c) Given the above classes (Point, Shape, Circle, and Triangle), finish the
  * following program: [Listing C]
  */
+#include <iostream>
+
+class Shape
+{
+public:
+    virtual std::ostream& print(std::ostream& out) const = 0;
+
+    friend std::ostream& operator<<(std::ostream& out, const Shape& shape)
+    {
+        return shape.print(out);
+    }
+
+    virtual ~Shape() {}
+};
 
 // Listing BP
 //class Point
