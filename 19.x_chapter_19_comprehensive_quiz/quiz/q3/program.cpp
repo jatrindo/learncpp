@@ -12,6 +12,9 @@
  * 
  *  Pair: Hello 5
 */
+#include <iostream>
+#include <string>
+
 // Pair class from Q2:
 template <typename T, typename U>
 class Pair
@@ -29,6 +32,16 @@ public:
     const T& first() const { return m_x; }
     const U& second() const { return m_y; }
 }; 
+
+template <typename U>
+class StringValuePair: public Pair<std::string, U>
+{
+public:
+    StringValuePair(const std::string& x, const U& y)
+        : Pair<std::string, U>{ x, y }
+    {
+    }
+};
 
 // [Listing M]
 int main()
