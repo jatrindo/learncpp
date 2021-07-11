@@ -26,15 +26,11 @@ private:
     int m_bot;
 
 public:
-    Fraction(int top, int bot) try
+    Fraction(int top, int bot)
         : m_top{ top }, m_bot{ bot }
     {
         if (bot == 0)
             throw std::runtime_error("Invalid denominator");
-    }
-    catch (std::runtime_error& e)
-    {
-        throw;
     }
 
     friend std::ostream& operator<<(std::ostream& out, Fraction& f)
