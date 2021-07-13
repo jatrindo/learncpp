@@ -20,7 +20,17 @@ int main()
 {
     auto* res{ new Resource{} };
     std::shared_ptr<Resource> ptr1{ res };
-    std::shared_ptr<Resource> ptr2{ res };
+
+    // std::shared_ptr<Resource> ptr2{ res }; // <-- The issue is here
+
+    // Issue Explanation: Two different std::shared_ptr's were created
+    // separately to manage the same resource, rather than using a copy
+    // constructor to initialize the std::shared_ptr with the first. This causes
+    // for a double-free to occur when the main function ends and the second
+    // std::shared_ptr to go out of scope gets destroyed.
+
+    // Solution: Have the second shared pointer be copy-constructed
+    std::shared_ptr<Resource> ptr2{ ptr1 };
 
     return 0;
 }
