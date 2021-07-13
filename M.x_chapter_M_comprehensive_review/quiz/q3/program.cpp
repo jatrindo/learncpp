@@ -18,10 +18,11 @@ public:
 
 int main()
 {
-    auto* res{ new Resource{} };
-    std::shared_ptr<Resource> ptr1{ res };
+    // auto* res{ new Resource{} };
+    // std::shared_ptr<Resource> ptr1{ res };
+    //      ^^^ std::make_shared() should be used instead of these two lines
 
-    // std::shared_ptr<Resource> ptr2{ res }; // <-- The issue is here
+    // std::shared_ptr<Resource> ptr2{ res }; // <-- The main issue is here
 
     // Issue Explanation: Two different std::shared_ptr's were created
     // separately to manage the same resource, rather than using a copy
@@ -30,6 +31,7 @@ int main()
     // std::shared_ptr to go out of scope gets destroyed.
 
     // Solution: Have the second shared pointer be copy-constructed
+    std::shared_ptr<Resource> ptr1{ std::make_shared<Resource>() };
     std::shared_ptr<Resource> ptr2{ ptr1 };
 
     return 0;
